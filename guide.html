@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昆苏沪三日免费游 | 交互式攻略</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral (Oat, Stone, Slate Blue) -->
+    <!-- Application Structure Plan: A single-page application with tab-based navigation (Overview, Day 1, Day 2, Day 3, Alt. Plan, Tools). This non-linear structure allows users to directly access the information they need, such as a specific day's itinerary or the transportation options, improving usability over the original linear document. Interactive elements like a transport mode toggle and a budget chart are used in the 'Overview' to synthesize key decision-making data upfront. Daily plans are presented as expandable cards to manage information density. This task-oriented design (e.g., 'plan a day', 'check budget') is more user-friendly than a simple digital report. -->
+    <!-- Visualization & Content Choices: 1. Report Info: Transportation comparison (Table 1). Goal: Compare. Viz: Interactive toggle between 'Rail' and 'Metro' data blocks. Interaction: Click to switch views. Justification: Allows direct comparison of modes. Method: Vanilla JS. 2. Report Info: Budget breakdown (Appendix A3). Goal: Inform/Proportion. Viz: Donut Chart. Interaction: Hover for tooltips. Justification: Quick visual understanding of cost distribution. Library: Chart.js. 3. Report Info: Daily itineraries. Goal: Organize. Viz: Vertical timeline/cards. Interaction: Click to expand for details (e.g., reservation steps). Justification: Reduces initial cognitive load. Method: JS for expand/collapse. 4. Report Info: Food lists (Tables 2, 3). Goal: Organize. Viz: Interactive card grid. Interaction: Hover/click to see details. Justification: More engaging and visual than a table. Method: JS for interaction. CONFIRMED: NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #F5F5F4; /* Stone 100 */ }
+        .nav-btn { transition: all 0.3s ease; }
+        .nav-btn.active { color: #1E40AF; /* Blue 800 */ border-bottom-color: #1E40AF; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .card { background-color: #FFFFFF; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem; transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
+        .expand-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; height: 320px; max-height: 400px; }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-stone-900 text-center">梦回江南，游走双城</h1>
+            <p class="text-center text-stone-500 mt-1">昆山出发 · 苏沪三日游交互式攻略</p>
+        </div>
+        <nav class="bg-stone-50 border-b border-stone-200">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-center space-x-2 sm:space-x-4 md:space-x-8 overflow-x-auto whitespace-nowrap -mb-px">
+                    <button data-target="overview" class="nav-btn active text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">行程概览</button>
+                    <button data-target="day1" class="nav-btn text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">第一天 · 苏州</button>
+                    <button data-target="day2" class="nav-btn text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">第二天 · 上海</button>
+                    <button data-target="day3" class="nav-btn text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">第三天 · 归途</button>
+                    <button data-target="alt-plan" class="nav-btn text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">备选方案</button>
+                    <button data-target="tools" class="nav-btn text-sm sm:text-base font-medium py-3 px-2 sm:px-4 border-b-2 border-transparent text-stone-600 hover:text-blue-700">实用工具</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <!-- 行程概览 -->
+        <section id="overview" class="content-section active">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">开启您的江南双城记</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">本部分为您提供旅行的宏观视角，包括核心理念、交通策略和预算概览。在这里，您将理解如何以高性价比的方式，在苏州的古典与上海的现代之间从容切换，开启一场深入城市灵魂的旅程。</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4 text-center">交通策略对比</h3>
+                    <p class="text-stone-600 mb-4 text-sm">精通交通是高效旅行的基石。在昆山、苏州、上海之间，您可以选择风驰电掣的高铁，或是极致经济的地铁。点击下方按钮，查看不同交通方式的优劣势，选择最适合您的出行方案。</p>
+                    <div class="flex justify-center rounded-lg bg-stone-100 p-1 mb-4">
+                        <button id="show-rail" class="transport-toggle w-1/2 p-2 rounded-md text-sm font-medium bg-blue-600 text-white">高铁网络</button>
+                        <button id="show-metro" class="transport-toggle w-1/2 p-2 rounded-md text-sm font-medium">地铁漫游</button>
+                    </div>
+                    <div id="rail-info">
+                        <h4 class="font-bold text-lg mb-2 text-blue-700">高铁：速度与舒适之选</h4>
+                        <ul class="space-y-2 text-stone-700 text-sm">
+                            <li><span class="font-semibold">优势：</span>速度最快，极大压缩城际交通时间，是追求效率的首选。</li>
+                            <li><span class="font-semibold">昆山↔苏州：</span>约20分钟，¥9起。</li>
+                            <li><span class="font-semibold">苏州↔上海：</span>约30分钟，¥12.5起。</li>
+                            <li><span class="font-semibold">关键站点：</span>昆山南站、苏州站、上海虹桥/上海站。</li>
+                        </ul>
+                    </div>
+                    <div id="metro-info" class="hidden">
+                        <h4 class="font-bold text-lg mb-2 text-blue-700">地铁：经济与灵活之道</h4>
+                        <ul class="space-y-2 text-stone-700 text-sm">
+                            <li><span class="font-semibold">优势：</span>成本极低，无需预购票，不受地面交通影响。</li>
+                            <li><span class="font-semibold">耗时：</span>昆山至上海市中心约2.5-3.5小时。</li>
+                            <li><span class="font-semibold">换乘点：</span>苏州11号线与上海11号线在【花桥站】无缝换乘。</li>
+                            <li><span class="font-semibold">贴士：</span>苏州11号线深夜有“大站快车”，方便晚归。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4 text-center">三日行程预算概览</h3>
+                     <p class="text-stone-600 mb-4 text-sm">本攻略聚焦免费景点和公共交通，旨在证明一次高品质的苏沪双城游也可以非常经济。下图是基于单人、以昆山为基地每日往返的估算，让您对花费有直观的了解。</p>
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第一天 -->
+        <section id="day1" class="content-section">
+             <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">第一天：沉浸苏州的诗意灵魂</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">本部分将引导您完成在苏州的第一天行程。您将从世界级博物馆的现代设计开始，漫步于千年古街，并在夜晚感受水乡的璀璨灯火。点击各个模块，探索详细的活动安排与不容错过的本地美食。</p>
+            </div>
+            <div class="space-y-8">
+                <!-- Itinerary Cards -->
+                <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">上午 9:00 - 12:30</p>
+                            <h3 class="text-xl font-bold">苏州博物馆</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="expand-content">
+                        <p class="mt-4 text-stone-600">贝聿铭大师的封山之作，将现代几何与古典园林意境完美融合。建筑本身就是最重要的展品。</p>
+                        <div class="mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                            <h4 class="font-bold text-amber-800">预约是关键！</h4>
+                            <p class="text-sm text-amber-700">苏博免费但需【提前7天】在官方微信小程序实名预约。节假日门票极为抢手，建议在放票日早上8点准时操作。参观当日务必携带身份证原件准时入场。</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">下午 13:00 - 17:00</p>
+                            <h3 class="text-xl font-bold">平江路历史文化街区</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                     <div class="expand-content">
+                        <p class="mt-4 text-stone-600">从苏博步行即达。这里是“水陆并行、河街相邻”的活态历史画卷，完美复刻了宋代《平江图》的格局。魅力在于原真的氛围，而非特定景点，请静心漫步，感受石板路、古桥与枕河人家的宁静。</p>
+                    </div>
+                </div>
+                <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                           <p class="text-sm font-medium text-blue-600">傍晚 18:00 起</p>
+                            <h3 class="text-xl font-bold">山塘街</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                     <div class="expand-content">
+                        <p class="mt-4 text-stone-600">如果说平江路是白日的雅致，山塘街的精华则在夜晚。当沿河的红灯笼悉数点亮，倒映在水中，便是“诗画江南”的经典夜景。由大诗人白居易修建的古街，至今风韵犹存。</p>
+                    </div>
+                </div>
+
+                <!-- Food Guide -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-center mb-4">苏州美食寻味图</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 text-center">
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🥮</p>
+                            <p class="font-medium text-sm mt-1">海棠糕</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🌸</p>
+                            <p class="font-medium text-sm mt-1">梅花糕</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🍘</p>
+                            <p class="font-medium text-sm mt-1">油氽团子</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🥟</p>
+                            <p class="font-medium text-sm mt-1">泡泡馄饨</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🍳</p>
+                            <p class="font-medium text-sm mt-1">生煎</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🍡</p>
+                            <p class="font-medium text-sm mt-1">苏式汤团</p>
+                        </div>
+                    </div>
+                    <div id="food-details" class="mt-4 p-3 bg-stone-50 rounded-lg text-sm text-center text-stone-600 hidden">
+                        <p>将鼠标悬停在美食图标上查看详情。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二天 -->
+        <section id="day2" class="content-section">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">第二天：见证上海的璀璨盛景</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">告别苏州的古典，今天我们将搭乘高铁，在半小时内切换至上海的现代频道。您将亲身体验全球闻名的天际线，并在艺术的殿堂与市井的活力中穿梭。</p>
+            </div>
+             <div class="space-y-8">
+                <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">上午 9:00 - 13:00</p>
+                            <h3 class="text-xl font-bold">南京路步行街 → 外滩</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="expand-content">
+                        <p class="mt-4 text-stone-600">从“中华商业第一街”南京路开始，感受上海的商业脉搏。一路向东，视野豁然开朗，抵达外滩。在这里，黄浦江两岸上演着一场跨越时空的建筑对话：一边是“万国建筑博览群”，另一边是陆家嘴的未来主义天际线。这一切，都是免费向公众开放的壮丽景观。</p>
+                    </div>
+                </div>
+                 <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">下午 14:00 - 17:00</p>
+                            <h3 class="text-xl font-bold">中华艺术宫</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                     <div class="expand-content">
+                        <p class="mt-4 text-stone-600">由2010年世博会中国馆“东方之冠”改建而成，是上海文化自信的象征。馆藏丰富，尤其以中国近现代美术作品为特色。</p>
+                        <div class="mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                            <h4 class="font-bold text-amber-800">同样需要预约！</h4>
+                            <p class="text-sm text-amber-700">通过“中华艺术宫”官方微信公众号【提前2-12天】实名预约。免费参观，周一闭馆。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                           <p class="text-sm font-medium text-blue-600">傍晚 18:30 起</p>
+                            <h3 class="text-xl font-bold">田子坊</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                     <div class="expand-content">
+                        <p class="mt-4 text-stone-600">由上海特色的石库门建筑群改造的创意街区。与新天地的精致不同，田子坊的魅力在于其“原真粗粝”的市井气息与商业活力的混合。在迷宫般的小巷中穿行，本身就是一种探索的乐趣。</p>
+                    </div>
+                </div>
+                 <!-- Food Guide -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-center mb-4">上海美食精选</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🍳</p><p class="font-medium text-sm mt-1">生煎</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🥟</p><p class="font-medium text-sm mt-1">小笼包</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🍖</p><p class="font-medium text-sm mt-1">排骨年糕</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🐸</p><p class="font-medium text-sm mt-1">牛蛙面</p>
+                        </div>
+                        <div class="food-item p-2 rounded-lg hover:bg-stone-100 cursor-pointer">
+                            <p class="text-2xl">🦋</p><p class="font-medium text-sm mt-1">蝴蝶酥</p>
+                        </div>
+                    </div>
+                    <div id="food-details-sh" class="mt-4 p-3 bg-stone-50 rounded-lg text-sm text-center text-stone-600 hidden">
+                         <p>将鼠标悬停在美食图标上查看详情。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三天 -->
+        <section id="day3" class="content-section">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">第三天：漫步时尚飞地与归途</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">旅程的最后一天，我们放慢脚步，探索上海更为精致、时尚的一面。在感受完旧时光与新风尚的碰撞后，我们将从容踏上返回昆山的归途。</p>
+            </div>
+             <div class="space-y-8">
+                 <div class="card expandable">
+                    <div class="cursor-pointer flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">上午 9:30 - 13:00</p>
+                            <h3 class="text-xl font-bold">新天地 → 前法租界</h3>
+                        </div>
+                        <span class="text-2xl text-stone-400 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="expand-content">
+                        <p class="mt-4 text-stone-600"><span class="font-bold">新天地：</span>保留石库门建筑旧貌、更新内部功能的城市更新典范。氛围比田子坊更宽敞、高档，是感受国际化都市气息的绝佳场所。</p>
+                        <p class="mt-2 text-stone-600"><span class="font-bold">前法租界 (可选)：</span>从新天地向西漫步，进入武康路一带，高大的梧桐树与历史悠久的老洋房将带您进入一个宁静优雅的上海。</p>
+                    </div>
+                </div>
+                 <div class="card">
+                    <div>
+                        <p class="text-sm font-medium text-blue-600">下午 13:00 - 16:00</p>
+                        <h3 class="text-xl font-bold">告别午餐与踏上归途</h3>
+                        <p class="mt-2 text-stone-600">在新天地附近选择一家心仪的餐厅，或重温一款特色小吃，为旅途画上圆满句号。之后规划好时间，乘坐地铁前往上海虹桥站或上海站，搭乘高铁便捷返回昆山。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 备选方案 -->
+        <section id="alt-plan" class="content-section">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">灵活行程：深度探索现代苏州</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">并非所有人都希望在短时间内穿梭于两个超级城市。此备选方案专为希望更深度、更从容体验苏州的旅行者设计，同时展现苏州古典之外的现代化图景。</p>
+            </div>
+             <div class="card">
+                <h3 class="text-xl font-bold">备选方案：第二天留在苏州，探索金鸡湖</h3>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-lg text-blue-700">行程变更</h4>
+                        <p class="text-stone-600 mt-2">放弃第二天前往上海的计划，转而探索苏州的现代核心——金鸡湖景区。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-blue-700">游玩内容</h4>
+                        <ul class="list-disc list-inside space-y-2 text-stone-600 mt-2">
+                            <li><span class="font-semibold">免费开放：</span>整个金鸡湖景区免费，是中国最大的城市内湖公园之一。</li>
+                            <li><span class="font-semibold">湖滨大道：</span>散步或骑行，欣赏湖景与城市天际线。</li>
+                            <li><span class="font-semibold">东方之门：</span>打卡地标建筑“秋裤楼”。</li>
+                            <li><span class="font-semibold">李公堤：</span>漫步湖中长堤，这里汇集了众多餐厅与商铺。</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
+                    <h4 class="font-bold text-blue-800">后续行程调整</h4>
+                    <p class="text-sm text-blue-700">采用此方案的旅行者，将在第三天上午从苏州前往上海，进行一次浓缩版的上海之旅（如只游览外滩和南京路），然后在傍晚从上海返回昆山。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实用工具 -->
+        <section id="tools" class="content-section">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">精明旅行者工具箱</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl mx-auto">工欲善其事，必先利其器。本部分为您整合了旅途中必要的手机应用和关键景点的预约信息速查，助您轻松出行。</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">必备手机应用</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center"><span class="text-2xl mr-3">📱</span><div><p class="font-semibold">交通出行</p><p class="text-sm text-stone-600">“苏e行” (苏州), “Metro大都会” (上海)</p></div></li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🎫</span><div><p class="font-semibold">票务预订</p><p class="text-sm text-stone-600">“铁路12306” (官方), “携程/Trip.com” (备用)</p></div></li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🏛️</span><div><p class="font-semibold">文旅服务 & 预约</p><p class="text-sm text-stone-600">“君到苏州”, “微信” (用于各景点预约小程序)</p></div></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">核心景点预约速查</h3>
+                     <ul class="space-y-4">
+                        <li>
+                            <p class="font-semibold">苏州博物馆</p>
+                            <p class="text-sm text-stone-600">渠道：微信小程序“苏州博物馆”</p>
+                            <p class="text-sm text-stone-600">窗口：<span class="font-bold text-red-600">提前7天</span>，建议早8点抢票</p>
+                        </li>
+                         <li>
+                            <p class="font-semibold">中华艺术宫</p>
+                            <p class="text-sm text-stone-600">渠道：微信公众号“中华艺术宫”</p>
+                            <p class="text-sm text-stone-600">窗口：提前2-12天</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            const transportToggles = document.querySelectorAll('.transport-toggle');
+            const railInfo = document.getElementById('rail-info');
+            const metroInfo = document.getElementById('metro-info');
+            const expandables = document.querySelectorAll('.expandable');
+            const foodItems = document.querySelectorAll('#day1 .food-item');
+            const foodDetails = document.getElementById('food-details');
+            const foodItemsSh = document.querySelectorAll('#day2 .food-item');
+            const foodDetailsSh = document.getElementById('food-details-sh');
+
+            const foodData = {
+                "海棠糕": "外形酷似海棠花，外皮焦糖香脆，内馅是细腻的豆沙，甜而不腻。推荐店家：平江路、山塘街沿线。",
+                "梅花糕": "类似海棠糕，但顶部常有小圆子和果脯点缀，口感更丰富。推荐店家：平江路“梅月轩”。",
+                "油氽团子": "糯米团子包裹鲜肉馅，外壳酥脆，内里软糯。推荐店家：山塘街“荣阳楼”。",
+                "泡泡馄饨": "皮薄如纸，重在品尝大骨熬制的鲜美汤头。推荐店家：平江路沿线小吃店。",
+                "生煎": "底部金黄酥脆，肉馅饱满，汤汁四溢。苏州推荐：观前街“大阿二生煎”。",
+                "苏式汤团": "手工制作，皮糯馅足，有鲜肉、豆沙等多种口味。推荐店家：山塘街“朱新年点心店”。"
+            };
+
+            const foodDataSh = {
+                "生煎": "上海生煎的代表，皮薄、底脆、肉香、汤多。推荐店家：南京路步行街“大壶春”。",
+                "小笼包": "皮薄馅大，汤汁鲜美，享誉世界。推荐店家：“佳家汤包”、豫园“南翔馒头店”。",
+                "排骨年糕": "炸猪排与软糯的年糕，配特制甜辣酱。推荐店家：“鲜得来”老字号。",
+                "牛蛙面": "大块鲜嫩的牛蛙，配浓郁汤头和劲道面条。推荐店家：“哈灵面馆”。",
+                "蝴蝶酥": "层次分明，奶香浓郁，酥脆可口。推荐店家：国际饭店帆声西饼屋、哈尔滨食品厂。"
+            };
+
+            function showFoodDetails(e, detailsElement, data) {
+                const foodName = e.currentTarget.querySelector('p:last-child').textContent.trim();
+                detailsElement.innerHTML = `<p class="font-bold">${foodName}</p><p class="mt-1">${data[foodName]}</p>`;
+                detailsElement.classList.remove('hidden');
+            }
+
+            function hideFoodDetails(detailsElement, defaultText) {
+                 detailsElement.innerHTML = `<p>${defaultText}</p>`;
+            }
+            
+            foodItems.forEach(item => {
+                item.addEventListener('mouseenter', (e) => showFoodDetails(e, foodDetails, foodData));
+            });
+             foodDetails.addEventListener('mouseleave', () => hideFoodDetails(foodDetails, '将鼠标悬停在美食图标上查看详情。'));
+
+
+            foodItemsSh.forEach(item => {
+                item.addEventListener('mouseenter', (e) => showFoodDetails(e, foodDetailsSh, foodDataSh));
+            });
+            foodDetailsSh.addEventListener('mouseleave', () => hideFoodDetails(foodDetailsSh, '将鼠标悬停在美食图标上查看详情。'));
+
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const targetId = button.getAttribute('data-target');
+                    contentSections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            transportToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    transportToggles.forEach(t => t.classList.remove('bg-blue-600', 'text-white'));
+                    toggle.classList.add('bg-blue-600', 'text-white');
+
+                    if (toggle.id === 'show-rail') {
+                        railInfo.classList.remove('hidden');
+                        metroInfo.classList.add('hidden');
+                    } else {
+                        railInfo.classList.add('hidden');
+                        metroInfo.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            expandables.forEach(expandable => {
+                const header = expandable.querySelector('.cursor-pointer');
+                const content = expandable.querySelector('.expand-content');
+                const icon = expandable.querySelector('span');
+
+                header.addEventListener('click', () => {
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(45deg)';
+                    }
+                });
+            });
+
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['交通', '餐饮'],
+                    datasets: [{
+                        label: '预算花费 (元)',
+                        data: [95, 255],
+                        backgroundColor: [
+                            'rgb(59, 130, 246)', // blue-500
+                            'rgb(234, 179, 8)'    // yellow-500
+                        ],
+                        borderColor: '#F5F5F4',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
