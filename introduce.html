@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的名字 | 个人链接中心</title>
+    <meta name="description" content="在这里找到我所有的社交媒体链接和作品集。">
+
+    <link rel="icon" href="https://raw.githubusercontent.com/your-username/your-repo/main/favicon.png" type="image/png">
+
+    <meta property="og:title" content="你的名字 | 个人链接中心" />
+    <meta property="og:description" content="在这里找到我所有的社交媒体链接和作品集。" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/your-username/your-repo/main/profile-image.jpg" />
+    <meta property="og:url" content="https://your-username.github.io/your-repo/" />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* --- 全局与基础设置 --- */
+        :root {
+            --background-color: #e0e5ec;
+            --text-color: #333;
+            --highlight-color: #007bff;
+            --shadow-light: #ffffff;
+            --shadow-dark: #a3b1c6;
+            --gradient-color-1: #6dd5ed;
+            --gradient-color-2: #2193b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(-45deg, var(--gradient-color-1), var(--gradient-color-2), #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 主容器 --- */
+       .container {
+            width: 100%;
+            max-width: 680px;
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--background-color);
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+        }
+
+        /* --- 个人资料区域 --- */
+       .profile-header {
+            margin-bottom: 30px;
+        }
+
+       .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            border: 3px solid var(--background-color);
+        }
+
+       .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+       .profile-bio {
+            font-size: 16px;
+            color: #555;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* --- 链接区域 --- */
+       .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+       .link-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            transition: all 0.2s ease-in-out;
+        }
+
+       .link-button:hover {
+            box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+            color: var(--highlight-color);
+        }
+
+       .link-button i {
+            margin-right: 12px;
+            font-size: 22px;
+            width: 25px; /* 确保图标对齐 */
+            text-align: center;
+        }
+        
+       .link-button img {
+            margin-right: 12px;
+            height: 22px;
+            width: 22px;
+        }
+
+        /* --- 页脚 --- */
+       .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+
+       .footer a {
+            color: var(--highlight-color);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+
+        <header class="profile-header">
+            <img src="https://raw.githubusercontent.com/your-username/your-repo/main/profile-image.jpg" alt="你的头像" class="profile-avatar">
+            牧濑红莉栖 
+            各种折腾爱好者
+        </header>
+
+        <div class="links-container">
+            <a href="https://m.weibo.cn/profile/6741565873" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的微博">
+                <i class="fab fa-weibo"></i>
+                <span>微博 (Weibo)</span>
+            </a>
+
+            <a href="YOUR_WEIXIN_QR_CODE_LINK_HERE" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="查看我的微信公众号">
+                <i class="fab fa-weixin"></i>
+                <span>微信公众号 (WeChat)</span>
+            </a>
+
+            <a href="https://www.douyin.com/2825425574zzy" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的抖音">
+                <img src="https://cdn.simpleicons.org/douyin/333" alt="抖音图标">
+                <span>抖音 (Douyin)</span>
+            </a>
+            
+            <a href="https://space.bilibili.com/387021006" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的Bilibili">
+                <i class="fab fa-bilibili"></i>
+                <span>Bilibili</span>
+            </a>
+
+            <a href="https://www.xiaohongshu.com/1438067110" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的小红书">
+                <img src="https://cdn.simpleicons.org/xiaohongshu/333" alt="小红书图标">
+                <span>小红书 (Xiaohongshu)</span>
+            </a>
+
+            <a href="https://www.zhihu.com/people/55-62-74-73" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的知乎">
+                <i class="fab fa-zhihu"></i>
+                <span>知乎 (Zhihu)</span>
+            </a>
+
+            <a href="https://x.com/xstly9420" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的X (Twitter)">
+                <i class="fab fa-x-twitter"></i>
+                <span>X (Twitter)</span>
+            </a>
+
+            <a href="https://www.instagram.com/xstly9420/" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的Instagram">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+
+            <a href="https://www.youtube.com/channel/UC9CY9hWpC93h8o2jkUhK09w" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的YouTube频道">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+
+            <a href="https://www.tiktok.com/@xstly9420" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的TikTok">
+                <i class="fab fa-tiktok"></i>
+                <span>TikTok</span>
+            </a>
+
+            <a href="https://github.com/xstly9420" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的GitHub">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+            </a>
+
+            <a href="YOUR_LINKEDIN_LINK_HERE" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的LinkedIn">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+            </a>
+            
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024 你的名字. All Rights Reserved.</p>
+        </footer>
+
+    </main>
+
+</body>
+</html>
