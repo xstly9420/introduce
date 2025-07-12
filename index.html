@@ -22,13 +22,12 @@
     <style>
         /* --- 全局与基础设置 --- */
         :root {
-            --background-color: #e0e5ec;
-            --text-color: #333;
-            --highlight-color: #007bff;
-            --shadow-light: #ffffff;
-            --shadow-dark: #a3b1c6;
-            --gradient-color-1: #6dd5ed;
-            --gradient-color-2: #2193b0;
+            --text-color: #f0f0f0;
+            --highlight-color: #00aaff;
+            --background-overlay: rgba(0, 0, 0, 0.6);
+            --button-bg-color: rgba(255, 255, 255, 0.1);
+            --button-hover-bg-color: rgba(255, 255, 255, 0.2);
+            --button-hover-shadow-color: #00aaff;
         }
 
         * {
@@ -39,60 +38,68 @@
 
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background: linear-gradient(-45deg, var(--gradient-color-1), var(--gradient-color-2), #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
             color: var(--text-color);
+            background: url('https://images.alphacoders.com/604/604796.jpg') no-repeat center center fixed;
+            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            width: 100%;
         }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        
+        /* 添加一个背景蒙层以提高文本可读性 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--background-overlay);
+            z-index: -1;
         }
 
         /* --- 主容器 --- */
        .container {
             width: 100%;
-            max-width: 680px;
+            min-height: 100vh;
             text-align: center;
-            padding: 40px 20px;
-            background-color: var(--background-color);
-            border-radius: 20px;
-            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         /* --- 个人资料区域 --- */
        .profile-header {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
        .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-            border: 3px solid var(--background-color);
+            margin-bottom: 25px;
+            border: 4px solid var(--button-bg-color);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
        .profile-name {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
 
        .profile-bio {
-            font-size: 16px;
-            color: #555;
+            font-size: 18px;
+            color: var(--text-color);
             max-width: 500px;
             margin: 0 auto;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
         }
 
         /* --- 链接区域 --- */
@@ -100,6 +107,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 100%;
+            max-width: 600px; /* 限制链接按钮的最大宽度 */
         }
 
        .link-button {
@@ -109,42 +118,52 @@
             padding: 15px 20px;
             text-decoration: none;
             color: var(--text-color);
-            background-color: var(--background-color);
+            background-color: var(--button-bg-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             font-size: 18px;
             font-weight: 700;
-            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-            transition: all 0.2s ease-in-out;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
         }
 
        .link-button:hover {
-            box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-            color: var(--highlight-color);
+            background-color: var(--button-hover-bg-color);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--button-hover-shadow-color), 0 0 25px var(--button-hover-shadow-color);
         }
 
-       .link-button i {
+       .link-button i,
+       .link-button img {
             margin-right: 12px;
             font-size: 22px;
-            width: 25px; /* 确保图标对齐 */
+            width: 25px;
             text-align: center;
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
         }
         
        .link-button img {
-            margin-right: 12px;
             height: 22px;
             width: 22px;
         }
 
         /* --- 页脚 --- */
        .footer {
-            margin-top: 40px;
+            margin-top: 50px;
             font-size: 14px;
-            color: #777;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         }
 
        .footer a {
             color: var(--highlight-color);
             text-decoration: none;
+             transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: #fff;
         }
     </style>
 </head>
@@ -154,23 +173,23 @@
 
         <header class="profile-header">
             <img src="https://raw.githubusercontent.com/your-username/your-repo/main/profile-image.jpg" alt="你的头像" class="profile-avatar">
-            牧濑红莉栖 
-            各种折腾爱好者
+            <h1 class="profile-name">牧濑红莉栖</h1>
+            <p class="profile-bio">各种折腾爱好者</p>
         </header>
 
         <div class="links-container">
-            <a href="https://m.weibo.cn/profile/6741565873" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的微博">
+             <a href="https://m.weibo.cn/profile/6741565873" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的微博">
                 <i class="fab fa-weibo"></i>
                 <span>微博 (Weibo)</span>
             </a>
 
-            <a href="YOUR_WEIXIN_QR_CODE_LINK_HERE" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="查看我的微信公众号">
+            <a href="https://mp.weixin.qq.com/cgi-bin/home?t=home/index&token=1438795468&lang=zh_CN" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="查看我的微信公众号">
                 <i class="fab fa-weixin"></i>
                 <span>微信公众号 (WeChat)</span>
             </a>
 
             <a href="https://www.douyin.com/user/self?from_tab_name=main&showTab=post" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的抖音">
-                <img src="https://cdn.simpleicons.org/douyin/333" alt="抖音图标">
+                <img src="https://cdn.simpleicons.org/douyin/white" alt="抖音图标">
                 <span>抖音 (Douyin)</span>
             </a>
             
@@ -180,7 +199,7 @@
             </a>
 
             <a href="https://www.xiaohongshu.com/user/profile/61fa0abf000000001000ba7b" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的小红书">
-                <img src="https://cdn.simpleicons.org/xiaohongshu/333" alt="小红书图标">
+                <img src="https://cdn.simpleicons.org/xiaohongshu/white" alt="小红书图标">
                 <span>小红书 (Xiaohongshu)</span>
             </a>
 
@@ -218,11 +237,10 @@
                 <i class="fab fa-linkedin"></i>
                 <span>LinkedIn</span>
             </a>
-            
         </div>
 
         <footer class="footer">
-            <p>&copy; 2024 你的名字. All Rights Reserved.</p>
+            <p>© 2025 牧濑红莉栖. All Rights Reserved.</p>
         </footer>
 
     </main>
