@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>你的名字 | 个人链接中心</title>
+    <title>牧濑红莉栖 | 个人链接中心</title>
     <meta name="description" content="在这里找到我所有的社交媒体链接和作品集。">
 
-    <link rel="icon" href="https://raw.githubusercontent.com/your-username/your-repo/main/favicon.png" type="image/png">
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/133756756?v=4" type="image/png">
 
-    <meta property="og:title" content="你的名字 | 个人链接中心" />
+    <meta property="og:title" content="牧濑红莉栖 | 个人链接中心" />
     <meta property="og:description" content="在这里找到我所有的社交媒体链接和作品集。" />
-    <meta property="og:image" content="https://source.unsplash.com/500x500/?anime" />
-    <meta property="og:url" content="https://your-username.github.io/your-repo/" />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/133756756?v=4" />
+    <meta property="og:url" content="https://www.xstly.website/" />
     <meta property="og:type" content="website" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -219,7 +219,7 @@
     <main class="container">
 
         <header class="profile-header">
-            <img src="https://source.unsplash.com/random/160x160/?anime,girl" alt="随机动漫头像" class="profile-avatar">
+            <img src="https://avatars.githubusercontent.com/u/133756756?v=4" alt="牧濑红莉栖的头像" class="profile-avatar">
             <h1 class="profile-name">牧濑红莉栖</h1>
             <p class="profile-bio"><span id="typing-text"></span><span class="typing-cursor"></span></p>
         </header>
@@ -230,15 +230,7 @@
                 <span>微博 (Weibo)</span>
             </a>
 
-            <a href="https://mp.weixin.qq.com/cgi-bin/home?t=home/index&token=1438795468&lang=zh_CN" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="查看我的微信公众号">
-                <i class="fab fa-weixin"></i>
-                <span>微信公众号 (WeChat)</span>
-            </a>
 
-            <a href="https://www.douyin.com/user/self?from_tab_name=main&showTab=post" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的抖音">
-                <img src="https://cdn.simpleicons.org/douyin/1a1a1a" alt="抖音图标">
-                <span>抖音 (Douyin)</span>
-            </a>
             
             <a href="https://space.bilibili.com/387021006" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的Bilibili">
                 <i class="fab fa-bilibili"></i>
@@ -280,16 +272,33 @@
                 <span>GitHub</span>
             </a>
 
-            <a href="YOUR_LINKEDIN_LINK_HERE" class="link-button" target="_blank" rel="noopener noreferrer" aria-label="访问我的LinkedIn">
-                <i class="fab fa-linkedin"></i>
-                <span>LinkedIn</span>
+            <a href="index2.html" class="link-button" aria-label="查看昆苏沪三日游攻略">
+                <i class="fas fa-map-location-dot"></i>
+                <span>昆苏沪三日游攻略</span>
             </a>
         </div>
 
         <footer class="footer">
-            <p>© 2025 <a href="#" target="_blank" rel="noopener noreferrer">牧濑红莉栖</a>. All Rights Reserved.</p>
+            <p>© 2026 <a href="#" target="_blank" rel="noopener noreferrer">牧濑红莉栖</a>. All Rights Reserved.</p>
         </footer>
 
     </main>
     
     <script>
+        // 打字机效果：逐字显示简介
+        (function () {
+            var text = "在这里找到我所有的社交媒体链接和作品集。";
+            var el = document.getElementById("typing-text");
+            var i = 0;
+            function type() {
+                if (i < text.length) {
+                    el.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 90);
+                }
+            }
+            type();
+        })();
+    </script>
+</body>
+</html>
