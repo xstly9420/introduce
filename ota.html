@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>OTA 平台会员对比</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+      * { box-sizing: border-box; }
+      :root {
+        --bg: #f3f2ee;
+        --surface: #ffffff;
+        --surface-2: #eceae3;
+        --ink: #17201d;
+        --ink-2: #4c5751;
+        --ink-3: #7d8781;
+        --line: #d9d6cc;
+        --pine: #0c4a3e;
+        --pine-deep: #083329;
+        --pine-soft: #e2efe9;
+        --amber: #c47f17;
+        --amber-soft: #f7ecd4;
+        --red: #b03a26;
+        --red-soft: #f9e6e1;
+        --blue: #2c5f8a;
+        --blue-soft: #e3ecf4;
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #101413;
+          --surface: #1a201e;
+          --surface-2: #232a28;
+          --ink: #e9edea;
+          --ink-2: #b3bcb7;
+          --ink-3: #8a948e;
+          --line: #333d39;
+          --pine: #3fae93;
+          --pine-deep: #0d2b24;
+          --pine-soft: #17332c;
+          --amber: #e0a83e;
+          --amber-soft: #3a2f16;
+          --red: #e0785f;
+          --red-soft: #3c231d;
+          --blue: #7aa7cc;
+          --blue-soft: #1d2c3a;
+        }
+      }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 15.5px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 18px 64px; }
+      h1, h2, h3 { font-family: "Noto Serif SC", "Songti SC", serif; line-height: 1.3; margin: 0; }
+      a { color: var(--pine); text-underline-offset: 3px; }
+      @media (prefers-color-scheme: dark) { a { color: var(--pine); } }
+
+      /* ---------- verdict hero ---------- */
+      .verdict {
+        background: var(--pine-deep);
+        color: #eef4f1;
+        margin: 0 -18px;
+        padding: 34px 18px 30px;
+      }
+      .verdict-inner { max-width: 1080px; margin: 0 auto; }
+      .verdict .kicker {
+        font-size: 12.5px; letter-spacing: .14em; font-weight: 700;
+        color: #9fd3c2; margin: 0 0 10px;
+      }
+      .verdict h1 { font-size: clamp(26px, 5.4vw, 40px); font-weight: 900; color: #fff; }
+      .verdict h1 em { font-style: normal; color: #f2c14e; }
+      .verdict .sub { margin: 12px 0 0; color: #c8dcd4; max-width: 46em; font-size: 15px; }
+      .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+      @media (max-width: 640px) { .verdict-grid { grid-template-columns: 1fr; } }
+      .vcard {
+        background: rgba(255,255,255,.06);
+        border: 1px solid rgba(255,255,255,.16);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+      }
+      .vcard .rank { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #f2c14e; }
+      .vcard h3 { color: #fff; font-size: 20px; margin: 4px 0 6px; }
+      .vcard p { margin: 0; color: #c8dcd4; font-size: 14px; }
+      .verdict .holdings {
+        margin-top: 18px; padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,.16);
+        font-size: 13.5px; color: #a9c6bb;
+      }
+      .verdict .holdings b { color: #eef4f1; font-weight: 700; }
+
+      /* ---------- sticky nav ---------- */
+      .topnav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+        margin: 0 -18px; padding: 8px 18px;
+      }
+      .topnav-inner { max-width: 1080px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; }
+      .topnav a {
+        color: var(--ink-2); text-decoration: none; font-size: 13.5px; font-weight: 500;
+        padding: 7px 12px; border-radius: 999px; display: inline-flex; align-items: center; min-height: 32px;
+      }
+      .topnav a:hover { background: var(--surface-2); color: var(--ink); }
+
+      section { margin-top: 44px; }
+      .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+      .sec-head h2 { font-size: 23px; font-weight: 900; }
+      .sec-head .no { font-family: "Noto Serif SC", serif; color: var(--amber); font-weight: 900; font-size: 15px; }
+      .sec-sub { color: var(--ink-2); margin: 0 0 18px; max-width: 52em; font-size: 14.5px; }
+
+      /* ---------- ranking ---------- */
+      .rank-list { display: grid; gap: 10px; }
+      .rank-row {
+        display: grid; grid-template-columns: 52px 1fr; gap: 14px;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: var(--radius); padding: 14px 16px;
+      }
+      .rank-num {
+        font-family: "Noto Serif SC", serif; font-size: 30px; font-weight: 900;
+        color: var(--pine); line-height: 1; padding-top: 2px;
+      }
+      .rank-row.dim .rank-num { color: var(--ink-3); }
+      .rank-row h3 { font-size: 17px; margin-bottom: 2px; }
+      .rank-row h3 .tie { font-family: "Noto Sans SC", sans-serif; font-size: 12px; font-weight: 700; color: var(--amber); margin-left: 6px; }
+      .rank-row p { margin: 0; color: var(--ink-2); font-size: 14px; }
+      .rank-row p b { color: var(--ink); }
+      .rank-row .do { margin-top: 6px; font-size: 13.5px; color: var(--pine); font-weight: 500; }
+
+      /* ---------- scenario filter ---------- */
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+      .chip {
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+        border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 500;
+        cursor: pointer; font-family: inherit; min-height: 38px;
+      }
+      .chip[aria-pressed="true"] { background: var(--pine); border-color: var(--pine); color: #fff; }
+      @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #0b1512; } }
+      .scenario-note {
+        background: var(--pine-soft); border-radius: var(--radius);
+        padding: 12px 16px; font-size: 14px; margin-bottom: 16px; display: none;
+      }
+      .scenario-note.show { display: block; }
+      .scenario-note b { color: var(--pine); }
+
+      /* ---------- platform cards ---------- */
+      .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+      .pcard {
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column;
+      }
+      .pcard.spotlight { border-color: var(--pine); box-shadow: 0 0 0 1px var(--pine); }
+      .pcard.faded { opacity: .45; }
+      .pcard-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+      .pcard h3 { font-size: 19px; }
+      .pcard .en { font-family: "Noto Sans SC", sans-serif; font-size: 12px; color: var(--ink-3); font-weight: 500; display: block; margin-top: 1px; }
+      .badge {
+        font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+        white-space: nowrap; line-height: 1.5;
+      }
+      .badge-main { background: var(--pine); color: #fff; }
+      @media (prefers-color-scheme: dark) { .badge-main { color: #0b1512; } }
+      .badge-backup { background: var(--blue-soft); color: var(--blue); }
+      .badge-check { background: var(--amber-soft); color: var(--amber); }
+      .badge-skip { background: var(--surface-2); color: var(--ink-3); }
+      .verdict-line { font-size: 14px; color: var(--ink-2); margin: 8px 0 0; }
+      .verdict-line b { color: var(--ink); }
+
+      .ladder { margin: 14px 0 4px; display: grid; gap: 0; }
+      .rung { display: grid; grid-template-columns: 86px 1fr; gap: 10px; padding: 7px 0; border-top: 1px dashed var(--line); font-size: 13.5px; }
+      .rung:first-child { border-top: none; }
+      .rung .tier { font-weight: 700; color: var(--pine); }
+      .rung .req { color: var(--ink-2); }
+      .rung .req b { color: var(--ink); font-weight: 500; }
+      .rung.top .tier { color: var(--red); }
+      .flag {
+        display: inline-block; font-size: 11px; font-weight: 700; color: var(--red);
+        background: var(--red-soft); border-radius: 4px; padding: 0 5px; margin-left: 4px;
+        vertical-align: 1px; white-space: nowrap;
+      }
+      .flag.ok { color: var(--pine); background: var(--pine-soft); }
+
+      .facts { margin: 10px 0 0; padding: 0; list-style: none; font-size: 13.5px; color: var(--ink-2); display: grid; gap: 5px; }
+      .facts li { padding-left: 16px; position: relative; }
+      .facts li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); }
+      .facts b { color: var(--ink); font-weight: 500; }
+
+      details.more { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+      details.more summary {
+        cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--pine);
+        padding: 4px 0; list-style: none; display: flex; align-items: center; gap: 6px; min-height: 36px;
+      }
+      details.more summary::-webkit-details-marker { display: none; }
+      details.more summary::after { content: "▾"; font-size: 12px; }
+      details.more[open ] summary::after { content: "▴"; }
+      details.more .body { font-size: 13.5px; color: var(--ink-2); display: grid; gap: 7px; padding-bottom: 4px; }
+      details.more .body p { margin: 0; }
+      details.more .body b { color: var(--ink); font-weight: 500; }
+      .src { font-size: 12px; color: var(--ink-3); margin-top: auto; padding-top: 12px; }
+      .src a { color: var(--ink-3); }
+
+      .friend {
+        display: flex; align-items: center; gap: 8px; margin-top: 12px;
+        font-size: 12.5px; color: var(--ink-3);
+      }
+      .friend .dots { display: inline-flex; gap: 3px; }
+      .friend .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+      .friend .dot.on { background: var(--amber); }
+
+      /* ---------- calculator ---------- */
+      .calc {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 20px;
+      }
+      .calc-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+      @media (max-width: 640px) { .calc-controls { grid-template-columns: 1fr; } }
+      .calc label { font-size: 14px; font-weight: 700; display: block; margin-bottom: 6px; }
+      .calc label output { color: var(--pine); font-family: "Noto Serif SC", serif; font-size: 18px; margin-left: 6px; }
+      .calc input[type="range"] { width: 100%; accent-color: var(--pine); height: 36px; }
+      .calc-out { margin-top: 16px; display: grid; gap: 8px; }
+      .calc-item {
+        display: flex; gap: 10px; align-items: baseline; font-size: 14px;
+        background: var(--surface-2); border-radius: 10px; padding: 9px 13px;
+      }
+      .calc-item .st { font-weight: 700; white-space: nowrap; }
+      .calc-item.yes .st { color: var(--pine); }
+      .calc-item.no .st { color: var(--red); }
+      .calc-item span { color: var(--ink-2); }
+
+      /* ---------- two rules ---------- */
+      .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      @media (max-width: 700px) { .rules { grid-template-columns: 1fr; } }
+      .rule {
+        border-radius: var(--radius); padding: 18px; border: 1px solid var(--line); background: var(--surface);
+      }
+      .rule.good { border-top: 4px solid var(--pine); }
+      .rule.bad { border-top: 4px solid var(--red); }
+      .rule h3 { font-size: 17px; margin-bottom: 8px; }
+      .rule p, .rule li { font-size: 14px; color: var(--ink-2); }
+      .rule p { margin: 0 0 8px; }
+      .rule ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+      .rule b { color: var(--ink); }
+      .exception {
+        margin-top: 14px; background: var(--amber-soft); border-radius: var(--radius);
+        padding: 14px 16px; font-size: 14px;
+      }
+      .exception b { color: var(--amber); }
+
+      /* ---------- price modes ---------- */
+      .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      @media (max-width: 820px) { .modes { grid-template-columns: 1fr; } }
+      .mode { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+      .mode h3 { font-size: 17px; margin-bottom: 4px; }
+      .mode .win { font-size: 13px; font-weight: 700; color: var(--pine); margin-bottom: 8px; }
+      .mode p { margin: 0; font-size: 14px; color: var(--ink-2); }
+      .mode p + p { margin-top: 8px; }
+      .mode b { color: var(--ink); }
+
+      /* ---------- matrix ---------- */
+      .matrix { display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+      .mrow { display: grid; grid-template-columns: 190px 1fr 1fr; }
+      .mrow + .mrow { border-top: 1px solid var(--line); }
+      .mrow > div { padding: 11px 14px; font-size: 13.5px; }
+      .mrow .dim { font-weight: 700; background: var(--surface-2); }
+      .mrow .best { color: var(--ink); }
+      .mrow .best::before { content: "优 "; color: var(--pine); font-weight: 700; font-size: 12px; }
+      .mrow .worst { color: var(--ink-2); }
+      .mrow .worst::before { content: "弱 "; color: var(--red); font-weight: 700; font-size: 12px; }
+      @media (max-width: 640px) {
+        .mrow { grid-template-columns: 1fr; }
+        .mrow > div { padding: 7px 14px; }
+        .mrow .dim { padding-top: 11px; }
+        .mrow .worst { padding-bottom: 12px; }
+      }
+
+      /* ---------- jilin live check ---------- */
+      .jilin-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+      @media (max-width: 640px) { .jilin-compare { grid-template-columns: 1fr; } }
+      .jilin-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+      .jilin-box .big { font-family: "Noto Serif SC", serif; font-size: 38px; font-weight: 900; line-height: 1; color: var(--pine); }
+      .jilin-box .big small { font-size: 15px; font-family: "Noto Sans SC", sans-serif; font-weight: 700; color: var(--ink-2); }
+      .jilin-box h3 { font-size: 16px; margin: 6px 0 4px; }
+      .jilin-box p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+      .jilin-list { margin: 10px 0 0; padding: 0; list-style: none; font-size: 13.5px; display: grid; gap: 5px; }
+      .jilin-list li { display: flex; justify-content: space-between; gap: 12px; border-top: 1px dashed var(--line); padding-top: 5px; }
+      .jilin-list li:first-child { border-top: none; padding-top: 0; }
+      .jilin-list .price { font-weight: 700; color: var(--ink); white-space: nowrap; }
+      .jilin-meta { background: var(--surface-2); border-radius: 10px; padding: 11px 14px; font-size: 13px; color: var(--ink-2); margin-bottom: 16px; }
+      .jilin-meta b { color: var(--ink); }
+
+      /* ---------- harbin steps ---------- */
+      .steps { counter-reset: step; display: grid; gap: 10px; }
+      .step {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 14px 16px 14px 58px; position: relative; font-size: 14.5px; color: var(--ink-2);
+      }
+      .step::before {
+        counter-increment: step; content: counter(step);
+        position: absolute; left: 16px; top: 13px;
+        width: 28px; height: 28px; border-radius: 50%;
+        background: var(--pine); color: #fff; font-weight: 700; font-size: 15px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Noto Serif SC", serif;
+      }
+      @media (prefers-color-scheme: dark) { .step::before { color: #0b1512; } }
+      .step b { color: var(--ink); }
+
+      /* ---------- dont chase ---------- */
+      .dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      @media (max-width: 700px) { .dont { grid-template-columns: 1fr; } }
+      .dont-item {
+        background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--red);
+        border-radius: 10px; padding: 12px 15px; font-size: 14px;
+      }
+      .dont-item b { display: block; font-size: 14.5px; }
+      .dont-item span { color: var(--ink-2); }
+
+      /* ---------- open questions / sources ---------- */
+      .openq { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+      .openq ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); }
+      .sources { font-size: 12.5px; color: var(--ink-3); }
+      .sources li { margin-bottom: 5px; overflow-wrap: anywhere; }
+      .sources a { color: var(--ink-3); }
+      .foot-note { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ===================== VERDICT ===================== -->
+      <header class="verdict">
+        <div class="verdict-inner">
+          <p class="kicker">结论先行 · OTA + 国内酒店集团会员横向对比</p>
+          <h1>主力只留两个：<em>飞猪</em> + <em>携程 / Trip.com</em><br />集团只领免费的，不追晚数</h1>
+          <p class="sub">以一年只住几晚的低频需求为例：所有平台和集团的顶级会员都不值得追。OTA 里真正有价值的是「零成本就能拿到的等级」和「能累计酒店集团房晚积分的订房渠道」；国内集团里，华住、亚朵、如家覆盖了最常见的经济型和中档价位带，免费注册和各类免费直通通道值得领，付费买卡和靠住升铂金/钻石仍然不值。</p>
+          <div class="verdict-grid">
+            <div class="vcard">
+              <div class="rank">第 1 名 · 用它，但不追它</div>
+              <h3>飞猪 Fliggy</h3>
+              <p>唯一能让 OTA 订单同时攒酒店集团房晚/积分（SNP）的平台：品牌官方旗舰店订「享会员权利」价，所订房晚可计入万豪、希尔顿等集团会籍；通兑/囤货套餐在大促时单晚价最低。F3 的会籍匹配权益若能通过 88VIP 等捷径拿到，性价比很高。</p>
+            </div>
+            <div class="vcard">
+              <div class="rank">第 2 名 · 默认搜索与订房</div>
+              <h3>携程 / Trip.com</h3>
+              <p>国内房源最深，二三线城市覆盖最全；中文客服与售后最稳。可达的中段等级门槛全场最低：国际版 1 单升 Gold、3 单升 Platinum。注意它和 Trip.com 是同一家公司、两套会员体系，别混着算。</p>
+            </div>
+          </div>
+          <p class="holdings">调研时间：2026-11-20；标「未核实」的数字来自二手或促销来源，本页照原样保留。下单前以各平台 App 内实时页面为准。</p>
+        </div>
+      </header>
+
+      <nav class="topnav" aria-label="本页目录">
+        <div class="topnav-inner">
+          <a href="#ranking">总排名</a>
+          <a href="#platforms">平台详解</a>
+          <a href="#groups">国内集团</a>
+          <a href="#calc">用量估算</a>
+          <a href="#proxy">代订规则</a>
+          <a href="#price">价格怎么比</a>
+          <a href="#jilin">三线城市房源案例</a>
+          <a href="#practical">订房实操</a>
+          <a href="#dont">别追清单</a>
+          <a href="#open">未核实事项</a>
+        </div>
+      </nav>
+
+      <!-- ===================== RANKING ===================== -->
+      <section id="ranking">
+        <div class="sec-head"><span class="no">01</span><h2>总排名：针对低频出行这一种用法</h2></div>
+        <p class="sec-sub">评分逻辑：一年 1–3 晚、几乎零额外消费能拿到多少价值；能不能累计酒店集团房晚与积分；付费会员是否第一晚就回本。换个高频出差的人来排，这个顺序会完全不同。</p>
+        <div class="rank-list">
+          <div class="rank-row">
+            <div class="rank-num">1</div>
+            <div>
+              <h3>飞猪 Fliggy</h3>
+              <p><b>唯一能「省钱 + 保级」同时成立的 OTA。</b>旗舰店「享会员权利」价可攒 SNP；通兑套餐价在大促最低。短板：单订日常价不便宜，F4–F6 靠消费根本够不着。</p>
+              <p class="do">动作：订品牌酒店优先看旗舰店和通兑；F3 可经 88VIP 等渠道获取，不必靠消费硬攒；囤券避免使用消费信贷。</p>
+            </div>
+          </div>
+          <div class="rank-row">
+            <div class="rank-num">2</div>
+            <div>
+              <h3>携程 / Trip.com</h3>
+              <p><b>国内默认入口。</b>房源最深、服务最稳、中段等级最易达（Gold 1 单 / Platinum 3 单）。短板：普通订单不攒酒店 SNP，经济型房源挂牌价常是同行里偏高的，要看到手价。</p>
+              <p class="do">动作：国内订房默认先搜它，比价时只看到手总价。</p>
+            </div>
+          </div>
+          <div class="rank-row">
+            <div class="rank-num">3</div>
+            <div>
+              <h3>Booking.com + Agoda<span class="tie">并列 · 免费备胎</span></h3>
+              <p><b>Booking Genius L1 注册即享部分房源 9 折，而且终身有效、永不降级</b>——全场唯一的「永不过期」等级，出境和民宿公寓最强。Agoda 银卡只需 2 单（VIP 房源最高 88 折），是东南亚/港澳台的比价利器。短板：两者国内房源都薄，Agoda 客服口碑最差。</p>
+              <p class="do">动作：两个都免费注册，只当出境和比价用，不追 L2/L3 和钻石。</p>
+            </div>
+          </div>
+          <div class="rank-row">
+            <div class="rank-num">4</div>
+            <div>
+              <h3>同程旅行 + 美团<span class="tie">并列 · 比价与顺手用</span></h3>
+              <p>同程经济型日常价常最低，银卡靠火车票订单就能到（6 单或 ¥2,000），抢票和票价保障是真本事；美团靠外卖日常消费被动攒成长值，本地临时订房常最便宜。短板：两家的酒店会员本身都没什么像样的早餐/升房权益阶梯。</p>
+              <p class="do">动作：同程管火车票、美团管临时房，都只比价不追级；同程黑鲸付费卡先别买。</p>
+            </div>
+          </div>
+          <div class="rank-row">
+            <div class="rank-num">—</div>
+            <div>
+              <h3>国内集团直订（华住会 · 亚朵 · 首旅如家）<span class="tie">不参与 OTA 排名 · 单独一条线</span></h3>
+              <p><b>不是平台，是常住连锁的「官方价」。</b>华住免费注册先领；亚朵先查芝麻分 ≥800 的免费金卡季卡；如家先看青春卡等优惠通道（报道低至 74 折）。三家金卡都是 88 折上下、都带早餐，差别只在免费拿到的难易。详见下方「国内集团」一节。</p>
+              <p class="do">动作：三个 App 各花两分钟把免费的领完，不买卡、不追铂金/钻石。</p>
+            </div>
+          </div>
+          <div class="rank-row dim">
+            <div class="rank-num">5</div>
+            <div>
+              <h3>Expedia / Hotels.com（One Key）</h3>
+              <p>体系本身设计得好：Blue 注册即 9 折起、代订规则写得最明确、OneKeyCash 1 美元抵 1 美元。但国内房源弱、等级每年 1 月 1 日清零重算、中国大陆账号能否完整使用 One Key 未核实。只适合出境用。</p>
+            </div>
+          </div>
+          <div class="rank-row dim">
+            <div class="rank-num">6</div>
+            <div>
+              <h3>HopeGoo · Klook · 滴滴 · 去哪儿（作为会员体系）</h3>
+              <p>HopeGoo 是同程的全球品牌，没找到国内会员等级体系；Klook 根本不是订房平台（玩乐/eSIM 才用它）；滴滴不卖房，只有会籍匹配价值；去哪儿与携程同集团、房源重叠。注意：<b>去哪儿作为「比价工具」很好用</b>——同房多供应商报价能找到全网地板价，找到后回飞猪/携程/官网订。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== PLATFORMS ===================== -->
+      <section id="platforms">
+        <div class="sec-head"><span class="no">02</span><h2>平台详解：等级阶梯与关键权益</h2></div>
+        <p class="sec-sub">点场景按钮可以高亮对应平台。每张卡给出：怎么升级（阶梯）、核心权益、帮别人订算不算、等级会不会过期。红色「未核实」标记表示该数字在调研中无法从可靠来源确认，别当成事实用。</p>
+        <div class="chips" role="group" aria-label="按场景筛选平台">
+          <button class="chip" data-scene="all" aria-pressed="true">全部平台</button>
+          <button class="chip" data-scene="domestic" aria-pressed="false">国内订房</button>
+          <button class="chip" data-scene="overseas" aria-pressed="false">出境旅行</button>
+          <button class="chip" data-scene="brand" aria-pressed="false">品牌酒店保级</button>
+          <button class="chip" data-scene="budget" aria-pressed="false">省钱优先</button>
+        </div>
+        <div class="scenario-note" id="scenarioNote" role="status"></div>
+
+        <div class="cards" id="cards">
+
+          <!-- Fliggy -->
+          <article class="pcard" data-tags="domestic brand budget">
+            <div class="pcard-head">
+              <h3>飞猪<span class="en">Fliggy · 阿里</span></h3>
+              <span class="badge badge-main">主力 ①</span>
+            </div>
+            <p class="verdict-line"><b>靠「捷径」而不是靠消费升级。</b>88VIP 直通 F3 是全场性价比最高的零旅行成本权益；靠花钱攒里程升 F4 以上不值得。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">F1</span><span class="req">注册即得</span></div>
+              <div class="rung"><span class="tier">F2</span><span class="req"><b>50 里程</b>（2024 年 4 月新体系 F1–F6）</span></div>
+              <div class="rung"><span class="tier">F3</span><span class="req">旧体系 1,000 里程；<b>新体系门槛未核实</b><span class="flag">未核实</span>；或 <b>88VIP 直接映射</b></span></div>
+              <div class="rung"><span class="tier">F4</span><span class="req"><b>3,000 里程</b> ≈ ¥6,000 旅行消费（酒店约 ¥2 = 1 里程）</span></div>
+              <div class="rung top"><span class="tier">F5 / F6</span><span class="req">10,000 / 50,000 里程 + 邀请，≈ ¥2 万 / ¥10 万，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>F3 是甜点位：</b>包含酒店会籍匹配权益（例如匹配希尔顿银卡等级）；88VIP→F3 另含每年 12 次免费升房、无限次延迟退房。</li>
+              <li><b>F5 才有大礼包：</b>免费早餐、无限升房、可匹配 31 个品牌金卡以上（含万豪金、希尔顿金体验、雅高铂金）——但门槛 ¥2 万/年，够不着。</li>
+              <li><b>旗舰店可攒 SNP：</b>在万豪/希尔顿等品牌官方旗舰店订「享会员权利」价，可攒房晚积分（详见代订一节）。</li>
+              <li><b>信用住：</b>芝麻信用免押金、离店自动扣款，是它独有的服务权益。</li>
+            </ul>
+            <details class="more">
+              <summary>价格、有效期与代订</summary>
+              <div class="body">
+                <p><b>价格：</b>品牌通兑/套餐（双 11、618）单晚价全场最强，如华住通兑券报道价约 ¥169/晚起（促销示例价，非长期价）；单订日常价约与携程持平，经济型比同程贵约 ¥18/晚（二手报道，低可信度）。</p>
+                <p><b>有效期：</b>里程自获得起至次年同月底有效，等级同步到期。</p>
+                <p><b>代订：</b>飞猪没有查到明确官方规则<span class="flag">未核实</span>；里程按付款账号的订单计。酒店 SNP 只认实际入住的会员本人。</p>
+                <p><b>提醒：</b>花呗「免费囤酒店」本质是消费信贷，低频用户囤几千元券、日期一滑就变成负债，别轻易用。</p>
+              </div>
+            </details>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></span> 靠捷径高，靠消费低</div>
+            <p class="src">来源：36氪、新浪、什么值得买等二手报道（索引级）；F3 新门槛、88VIP 酒店 95 折等数字未获官方确认。</p>
+          </article>
+
+          <!-- Ctrip -->
+          <article class="pcard" data-tags="domestic budget">
+            <div class="pcard-head">
+              <h3>携程 / Trip.com<span class="en">Trip.com Group · 同一家公司两套体系</span></h3>
+              <span class="badge badge-main">主力 ②</span>
+            </div>
+            <p class="verdict-line"><b>国际版按「订单数」升级，国内版按「成长分」升级，两套别混。</b>国际版阶梯经官网核实；国内版新旧两套规则并存且数字冲突。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">国际 Gold</span><span class="req"><b>完成 1 单</b>即升（注册为 Silver）</span></div>
+              <div class="rung"><span class="tier">国际 Platinum</span><span class="req"><b>1 年内 3 单</b>；含每年 1 次免费机场贵宾厅、Trip Coins +50%</span></div>
+              <div class="rung"><span class="tier">国际 Diamond</span><span class="req">8 单 + 消费满 US$1,000；再往上 Diamond+ 要 US$10,000</span></div>
+              <div class="rung"><span class="tier">国内 黄金</span><span class="req">成长分 <b>300</b>（新体系报道）；旧官网规则为基础分 2,000/年（酒店 ¥1 = 1 分）</span></div>
+              <div class="rung top"><span class="tier">国内 黑钻</span><span class="req">成长分 40,000（合伙人 80,000）≈ 酒店消费 ¥4–8 万，别追；铂金门槛 2,000 与 3,000 两说并存<span class="flag">未核实</span></span></div>
+            </div>
+            <ul class="facts">
+              <li><b>Trip Coins：</b>100 币 = US$1，预订所得有效期 18 个月；加成随等级涨（Gold +20% → 黑钻 +200%）。</li>
+              <li><b>贵宾厅：</b>国际版 Platinum 每年 1 次、Diamond 2 次；国内高等级另有高铁贵宾厅次数。</li>
+              <li><b>房源：</b>国内最深，二三线及县级目的地（大同、平遥、敦煌等）覆盖最好；某指南估算国内房源约 140 万间 vs Booking 约 15 万、Agoda 约 8 万（该指南自测估算，非官方）。</li>
+              <li><b>学生：</b>有学生价通道（上传学生证）；2023 年的校园卡权益已过时，确切折扣未核实<span class="flag">未核实</span>。</li>
+            </ul>
+            <details class="more">
+              <summary>取消、有效期与代订</summary>
+              <div class="body">
+                <p><b>取消/服务：</b>约 50–70% 房源可免费取消（指南估算）；「特惠价」不可退但便宜 20–30%。中文 24/7 客服规模全场最大。全等级都有订单取消保障（官网核实）。</p>
+                <p><b>有效期：</b>国际版等级 1 年，按过去 12 个月重算，不达标降级；国内成长分每分有效 365 天、60 天一轮重评。</p>
+                <p><b>代订：</b>有黑钻用户自述把公司和家人的行程都挂自己账号、积分全算自己（个人自述，非官方规则）；Trip.com 官方 FAQ 明确警告：纯为刷等级的订单可被取消资格。酒店 SNP 不转移。</p>
+                <p><b>价格：</b>经济型房源挂牌价常比同程贵 ¥10–25/晚（促销类报道，低可信度），但五星/国际连锁常反超；新推的「先囤后付」在学飞猪的囤货模式。</p>
+              </div>
+            </details>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></span> 底部高，顶部低</div>
+            <p class="src">来源：Trip.com 官网会员页（2026-11-20 实地核实）；国内规则为携程旧官网页 + 什么值得买等二手来源。</p>
+          </article>
+
+          <!-- Booking -->
+          <article class="pcard" data-tags="overseas">
+            <div class="pcard-head">
+              <h3>Booking.com<span class="en">Genius 计划 · Booking Holdings</span></h3>
+              <span class="badge badge-backup">免费备胎</span>
+            </div>
+            <p class="verdict-line"><b>全场最省心的零努力权益：注册就是 L1，终身有效永不降级。</b>没有积分货币，只有直接折扣。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">L1</span><span class="req"><b>注册即得</b>：部分住宿 9 折、部分租车 9 折</span></div>
+              <div class="rung"><span class="tier">L2</span><span class="req"><b>2 年内完成 5 单</b>：住宿 85–9 折，部分房源免费早餐 + 免费升房</span></div>
+              <div class="rung top"><span class="tier">L3</span><span class="req"><b>2 年内 15 单</b>：住宿 8–9 折 + 优先客服；对低频用户遥不可及，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>计数方式：</b>按「订单笔数」算，与间夜数、房数、金额无关；住宿、机票、租车、接送、景点都算，一单只算一次。</li>
+              <li><b>折扣范围：</b>仅参与 Genius 的房源（号称约 85 万家），折扣按税前价算。</li>
+              <li><b>取消最宽松：</b>约 70–80% 房源可免费取消（指南估算），大量房价无需预付。</li>
+              <li><b>短板：</b>国内房源薄（约 15 万，指南估算），三线以下城市弱；无学生计划；国内订房是否支持微信/支付宝未核实<span class="flag">未核实</span>。</li>
+            </ul>
+            <details class="more">
+              <summary>代订与适用场景</summary>
+              <div class="body">
+                <p><b>代订：</b>进度按登录账号的已完成订单计；官方没有明说订房人必须本人入住——按计数规则，帮别人订通常会计入下单账号的 Genius 进度，但这一点未获官方明确确认<span class="flag">未核实</span>。酒店 SNP 则肯定不转移。</p>
+                <p><b>适用：</b>出境、民宿公寓、独立酒店——这些没有集团 SNP 可攒的场景，L1 的 9 折就是纯赚。</p>
+              </div>
+            </details>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></span> L1 满分，L2 以上不追</div>
+            <p class="src">来源：FlyerFolio 指南（引 Booking.com 官方页，2026-10 核对）等索引级来源。</p>
+          </article>
+
+          <!-- Agoda -->
+          <article class="pcard" data-tags="overseas">
+            <div class="pcard-head">
+              <h3>Agoda<span class="en">AgodaVIP · Booking Holdings</span></h3>
+              <span class="badge badge-backup">免费备胎</span>
+            </div>
+            <p class="verdict-line"><b>东南亚比价专用。</b>银卡门槛低（2 单），但国内房源最薄、客服口碑最差，折扣只限打 VIP 标签的房源。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">Bronze</span><span class="req">注册即得：最优价保证、内部价</span></div>
+              <div class="rung"><span class="tier">Silver</span><span class="req"><b>24 个月内 2 单</b>：VIP 房源最高 88 折</span></div>
+              <div class="rung"><span class="tier">Gold</span><span class="req">5 单 <b>或</b> 消费 US$200：最高 82 折 + VIP 闪购价</span></div>
+              <div class="rung"><span class="tier">Platinum</span><span class="req">10 单或 US$400：最高 75 折，部分房源免费早餐</span></div>
+              <div class="rung top"><span class="tier">Diamond</span><span class="req">15 单 <b>且</b> US$1,500（2025 年 10 月新设），别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>AgodaCash：</b>返现约 1–4%（站点信用额度）；有效期各来源说法从 60 天到 5 年都有<span class="flag">未核实</span>，别囤。</li>
+              <li><b>有效期：</b>24 个月滚动窗口，老订单过期就掉级；另有指南称 VIP 身份本身只保 6 个月，与资格窗口说法冲突<span class="flag">未核实</span>。</li>
+              <li><b>取消：</b>比 Booking 严，尤其促销价；标准价通常灵活。</li>
+              <li><b>无学生计划</b>；国内支付方式未核实。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 只当东南亚/港澳台比价</div>
+            <p class="src">来源：HotelDig、Wego、ShopBack 等指南（索引级）；个别来源把门槛写成「间夜」而非「订单」，以订单版为准并存疑。</p>
+          </article>
+
+          <!-- Tongcheng -->
+          <article class="pcard" data-tags="domestic budget">
+            <div class="pcard-head">
+              <h3>同程旅行<span class="en">Tongcheng Travel · 微信生态</span></h3>
+              <span class="badge badge-check">比价 + 火车票</span>
+            </div>
+            <p class="verdict-line"><b>酒店会员本身没料，但「火车票 + 经济型低价」是真本事。</b>常被提到的「hopego」即它的全球品牌 HopeGoo（见下方小卡），国内订房用同程本体。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">普卡</span><span class="req">注册即得，长期有效</span></div>
+              <div class="rung"><span class="tier">银卡</span><span class="req"><b>过去 1 年 6 个有效订单 或 ¥2,000</b>——火车票订单也算，学生可达</span></div>
+              <div class="rung"><span class="tier">金卡</span><span class="req">20 单或 ¥10,000</span></div>
+              <div class="rung top"><span class="tier">白金 / 黑卡</span><span class="req">40 单或 ¥50,000 / 邀请制，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>付费黑鲸会员：</b>报道价 ¥88/年与 ¥98/年两说<span class="flag">未核实</span>；卖点是退票/票价下降赔付、每单返现 8–15%（促销来源）。它自己的回本说法是年订 5 次以上——低频用户达不到，别买。</li>
+              <li><b>贵宾厅靠里程兑换：</b>各等级次数说法不一<span class="flag">未核实</span>；酒店权益没有公开的折扣/早餐阶梯，主要靠券和返现。</li>
+              <li><b>学生营销最积极：</b>学生认证价、火车票 5 折起、机票学生价最高省 20% 均有报道，确切数字属促销口径<span class="flag">未核实</span>，但学生通道的存在是确定的。</li>
+              <li><b>价格：</b>促销类排名称经济型比携程低 ¥12–18/晚（示例：江苏某连锁同程 ¥189 vs 携程 ¥208 vs 美团 ¥195），方向可信、数字别当真。</li>
+            </ul>
+            <details class="more">
+              <summary>HopeGoo 是什么</summary>
+              <div class="body">
+                <p><b>HopeGoo 是同程旅行的全球品牌</b>，面向来亚洲/中国旅行的用户，有 G-Coins 奖励、多语种客服；<b>没有找到它的国内会员等级体系</b>。国内订房相关的就是同程旅行本体；HopeGoo 顶多当出境/入境比价的备选，不用在上面建会员。</p>
+                <p><b>代订：</b>同程无明确规则可查<span class="flag">未核实</span>，按同行惯例进度归下单账号；酒店 SNP 不转移。</p>
+              </div>
+            </details>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 银卡可顺手拿，酒店权益弱</div>
+            <p class="src">来源：新浪财经转述、什么值得买、凤凰网等索引级来源；黑鲸价格与返现为促销口径。</p>
+          </article>
+
+          <!-- Meituan -->
+          <article class="pcard" data-tags="domestic budget">
+            <div class="pcard-head">
+              <h3>美团<span class="en">Meituan · 本地生活，酒店只是一个部门</span></h3>
+              <span class="badge badge-check">被动攒级</span>
+            </div>
+            <p class="verdict-line"><b>唯一能靠日常生活「顺手」攒出酒店等级的平台</b>——外卖、到店消费都算成长值。但作为酒店会员去追，门槛高得离谱。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">普通</span><span class="req">2024 年后任意一笔实付订单即入会（2025 年 3 月新体系共 6 级）</span></div>
+              <div class="rung"><span class="tier">白银/黄金/铂金</span><span class="req">成长值 = 消费分（¥1 = 1 分）+ 任务分；<b>各档确切门槛未核实</b><span class="flag">未核实</span></span></div>
+              <div class="rung top"><span class="tier">黑金 / 黑钻</span><span class="req">无任务加成约 <b>¥10,000 / ¥30,000 每年</b>，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>核心权益是「神券」：</b>黑钻 ¥19.9/年可买每月 99 张券的年卡，黑金有更便宜的券包；高等级酒店权益含免费升房、免费早餐、机场贵宾厅。</li>
+              <li><b>库存强项：</b>同城/临时/低线城市和经济连锁；华住、亚朵通兑有竞争力。高星和国际连锁弱于携程。</li>
+              <li><b>学生：</b>学生认证与外卖账号打通，覆盖吃喝玩乐和酒店；促销报道的学生酒店价数字不稳定，低可信度。</li>
+              <li><b>取消：</b>没有平台级的免费取消优势，完全看房价条款——有报道用户当日取消被扣全款 ¥109，下单前必看条款。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 被动攒可以，主动追不行</div>
+            <p class="src">来源：新浪财经、国信证券研报（索引级）；旧版酒店专属阶梯（1 单/¥300/¥1,500/¥5,500）是另一套老体系，勿混用。</p>
+          </article>
+
+          <!-- Qunar -->
+          <article class="pcard" data-tags="domestic budget">
+            <div class="pcard-head">
+              <h3>去哪儿<span class="en">Qunar · 与携程同属 Trip.com 集团</span></h3>
+              <span class="badge badge-check">比价工具</span>
+            </div>
+            <p class="verdict-line"><b>当工具是全场最佳，当会员不值得建。</b>同房多供应商比价能找到地板价，但房源与携程大量重叠，追两套等级纯属重复劳动。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">V1–V5</span><span class="req">大众/白银/黄金/铂金/钻石，按成长值（订单、评价、签到）；<b>各档确切门槛未找到</b><span class="flag">未核实</span></span></div>
+              <div class="rung"><span class="tier">与携程互通</span><span class="req">有报道称同集团成长值可部分合并，未获官方条款确认<span class="flag">未核实</span></span></div>
+              <div class="rung top"><span class="tier">钻石</span><span class="req">门槛未核实；且它是国航金卡挑战四渠道里门槛最高的一个，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>权益：</b>优享价会员价、免费早餐、升房、延迟退房、免费取消、积分抵现；2023 年客服口径称银卡以上最高 85 折（具体由酒店定，已过时参考）。</li>
+              <li><b>价格透明度全场最好：</b>列表页就把会员价、券、积分、拼好房优惠逐项拆开标（2026 年新浪报道）。</li>
+              <li><b>风险：</b>低价里混有小供应商房源，有过「房型与图片不符、退款拖 4 天只退一半」的个案报道；促销排名还称半数测试单结算价比标价高 ¥15–22——找到低价后务必核对最终总价再付款。</li>
+              <li><b>学生：</b>有学生价标签和口令房玩法（叠加通兑券的 7 折是拼单话术，不是学生等级折扣）。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 工具满分，会员低分</div>
+            <p class="src">来源：新浪科技/财经、什么值得买（索引级）。</p>
+          </article>
+
+          <!-- Expedia -->
+          <article class="pcard" data-tags="overseas">
+            <div class="pcard-head">
+              <h3>Expedia / Hotels.com<span class="en">One Key · Expedia Group</span></h3>
+              <span class="badge badge-backup">仅出境</span>
+            </div>
+            <p class="verdict-line"><b>规则写得最清楚的一家</b>（官网实地核实）：按「行程元素」升级，一晚算一个元素；但每年清零 + 国内弱，只适合出境。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">Blue</span><span class="req"><b>注册即得</b>：50 万+ 房源 9 折起，返 1% OneKeyCash</span></div>
+              <div class="rung"><span class="tier">Silver</span><span class="req"><b>一年 5 个行程元素</b>：1 万+ 房源 85 折起，返 2%（VIP 房源 3%）</span></div>
+              <div class="rung"><span class="tier">Gold</span><span class="req">15 个元素：8 折起，返 2%（VIP 4%），VIP 房源有房时升房</span></div>
+              <div class="rung top"><span class="tier">Platinum</span><span class="req">30 个元素：返 3%（VIP 6%）；每年 1 月 1 日全部重算，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>行程元素：</b>1 张机票 / 1 个酒店间夜 / 1 天租车 / 1 张活动票各算 1 个，每个须 ≥ US$25（不含税费）。</li>
+              <li><b>OneKeyCash：</b>US$1 = US$1 直接抵扣，无黑屏日期；18 个月内有一次合格预订就不失效。</li>
+              <li><b>代订规则全场最明确（官网原文）：</b>下单的账号持有人赚 OneKeyCash，「无论订单里写的是哪位出行人」；也能用自己的返现给别人订。</li>
+              <li><b>短板：</b>国内房源弱（指南直言不建议当国内主力）；大陆账号能否用 One Key 未核实<span class="flag">未核实</span>；2026 年秋「延误送贵宾厅」新权益各帖说法 30 分钟/90 分钟不一<span class="flag">未核实</span>。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> 国内低，出境中</div>
+            <p class="src">来源：Expedia One Key 官网（2026-11-20 实地核实）。</p>
+          </article>
+
+          <!-- Klook -->
+          <article class="pcard" data-tags="overseas">
+            <div class="pcard-head">
+              <h3>Klook<span class="en">Klook Rewards · 玩乐平台，不是订房平台</span></h3>
+              <span class="badge badge-skip">酒店别用它</span>
+            </div>
+            <p class="verdict-line"><b>它的主场是门票、一日游、交通票和 eSIM。</b>酒店只是边角库存，没有早餐、升房这类订房权益，酒店会员不值得建。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">Explorer</span><span class="req">注册即得：KlookCash 返 0.1–0.8%</span></div>
+              <div class="rung"><span class="tier">Gold</span><span class="req"><b>365 天消费 US$500</b>：返现 ×3（0.28–2.4%）、会员价、1GB eSIM、优先客服</span></div>
+              <div class="rung top"><span class="tier">Platinum</span><span class="req">Gold 后再消费 US$1,500：返现 ×5、约 US$60 券包，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>KlookCash：</b>100 = US$1，获得后 365 天过期；等级保 365 天、无宽限期，不达标降一级。</li>
+              <li><b>「Platinum 送机场贵宾厅」</b>只见于一家券站汇总，其他来源没有<span class="flag">未核实</span>。</li>
+              <li><b>订房之外的正确用法：</b>出行时买景点票、交通票、eSIM 顺手用 Explorer 就够；US$500 的玩乐消费门槛，靠订一两晚酒店永远到不了。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> 酒店维度最低</div>
+            <p class="src">来源：TopCashback、Cuponation 等返现/券站（索引级）；各地区门槛有本地货币版本，美元数为全球口径。</p>
+          </article>
+
+          <!-- Didi -->
+          <article class="pcard" data-tags="brand">
+            <div class="pcard-head">
+              <h3>滴滴<span class="en">Didi · 打车平台，本身不卖房</span></h3>
+              <span class="badge badge-skip">只领匹配</span>
+            </div>
+            <p class="verdict-line"><b>它与住宿的唯一关系是「会籍匹配」：</b>日常打车的等级能换酒店集团会籍。已经打到高等级就去领，没打到千万别为酒店去刷车。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">V1–V8</span><span class="req"><b>2026 年 6 月体系重做：</b>改按成长值（实付 × 车型系数），考核窗口 3 个月 → 12 个月；<b>新体系各档门槛官方未公布</b><span class="flag">未核实</span>（旧里程值数字已作废）</span></div>
+              <div class="rung"><span class="tier">V5 / V6</span><span class="req">可匹配<b>华住、亚朵金卡</b>：房价折扣、免费早餐、升房、延迟退房</span></div>
+              <div class="rung top"><span class="tier">V7 / V8</span><span class="req">匹配华住/亚朵铂金 + 希尔顿会籍（金卡还是钻卡各报道不一<span class="flag">未核实</span>）；为它刷车远不如 ¥219 直买华住金卡</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>跨界权益是它的全部意义：</b>打车 → 酒店会籍 → 海底捞会籍（V7/V8 限量兑换金海/黑海），是唯一能把通勤消费变成酒店等级的平台。</li>
+              <li><b>没有代订问题：</b>滴滴没有酒店预订业务；旧体系下家庭账号成员的里程会计入户主。</li>
+              <li><b>无学生酒店权益。</b></li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> 住宿维度低；高频打车者例外</div>
+            <p class="src">来源：华尔街见闻、腾讯新闻、品玩（索引级）；2026 年 6–8 月为新体系保护期（只升不降），9 月起按过去 12 个月成长值定级。</p>
+          </article>
+
+          <!-- Huazhu + others -->
+          <article class="pcard" data-tags="domestic brand budget">
+            <div class="pcard-head">
+              <h3>华住会 + 集团直订<span class="en">不是 OTA，但日常最常住的连锁在这里</span></h3>
+              <span class="badge badge-backup">免费注册</span>
+            </div>
+            <p class="verdict-line"><b>汉庭、全季、桔子这些日常最常住的连锁，直订反而最划算。</b>华住金卡是全场最便宜的「真早餐 + 真折扣」；万豪/希尔顿/IHG/锦江同理：品牌房默认先看官方价。华住与亚朵、如家的完整横比见下方「国内集团」一节。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">星会员</span><span class="req"><b>注册免费</b>：95 折（帮助页口径；会员计划页作 98 折<span class="flag">口径冲突</span>）</span></div>
+              <div class="rung"><span class="tier">银会员</span><span class="req">3 晚 <b>或 ¥49 购买</b>：92 折</span></div>
+              <div class="rung"><span class="tier">金会员</span><span class="req">银卡后再住 5 晚 <b>或 ¥219 购买</b>：<b>88 折 + 1 份免费早餐</b></span></div>
+              <div class="rung top"><span class="tier">铂金</span><span class="req">一年 20 晚：85 折 + 最多 2 份早餐 + 升房，低频够不着</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>代订的明文例外：</b>华住会员线上帮别人订<b>可以享受会员折扣</b>（每天上限 10 间）；但积分和房晚只认「本人订、本人住」（华住官网帮助页）。</li>
+              <li><b>学生价：</b>报道有日常 88 折、周日周一校园周边 75 折的学生价（新浪 2026-10，低-中可信度）。</li>
+              <li><b>其他渠道速记：</b>抖音酒旅只有直播闪购、无会员体系，改退严，只适合日期已定且订单页核价后下单；京东旅行品质和售后口碑较好但经济房源薄；途牛只适合「酒店+门票」打包；途家/木鸟找特色民宿用，不比价不攒级；12306 有订房入口但价格不优，学生真正的福利是火车票学生票 75 折。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></span> 星会员免费，金卡看住宿量再买</div>
+            <p class="src">来源：华住官网会员帮助页（索引级）+ 什么值得买；抖音/京东等为博主实测类来源，低-中可信度。</p>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ===================== DOMESTIC GROUPS ===================== -->
+      <section id="groups">
+        <div class="sec-head"><span class="no">03</span><h2>国内集团补齐：华住会 · 亚朵 · 首旅如家</h2></div>
+        <p class="sec-sub">这三家和万豪/希尔顿不是一回事：它们覆盖的正是日常最常住的经济型和中档连锁（汉庭、全季、亚朵、如家），门店密、价位低，所以「免费等级 + 直订会员价」反而可能比国际集团银卡更常用。结论不变：<b>免费的领、能直通的领，靠住晚数升顶级和提前买卡仍然别追</b>——一年只有几晚，攒不到铂金/钻石。订法也不变：先在 OTA 比到手价，再回集团 App 看会员价，只有会员价或「享会员权利」旗舰店价才攒集团自己的积分房晚。</p>
+        <div class="cards">
+          <article class="pcard">
+            <div class="pcard-head">
+              <h3>华住会<span class="en">Huazhu · 汉庭 / 全季 / 桔子 / 漫心 / 星程 / 海友等</span></h3>
+              <span class="badge badge-main">免费注册 · 优先领</span>
+            </div>
+            <p class="verdict-line"><b>三家里覆盖最广、最值得先注册的一家。</b>在多数二三线城市，汉庭和全季的门店密度远高于国际品牌，实际住到的概率最高。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">星会员</span><span class="req"><b>注册免费</b>：折扣两处官方页面口径不一——帮助页为 <b>95 折</b>，较新的会员计划页为 <b>98 折</b>，下单以 App 显示为准<span class="flag">口径冲突</span></span></div>
+              <div class="rung"><span class="tier">银会员</span><span class="req">住 <b>3 晚</b> 或 <b>¥49 购买</b>：92 折，延退至 13:00，积分 1.5 倍</span></div>
+              <div class="rung"><span class="tier">金会员</span><span class="req">银卡后 1 年内再住 <b>5 个定级间夜</b>，或 ¥219 买年卡（银卡 ¥170）：<b>88 折 + 1 份免费早餐</b>，延退至 14:00</span></div>
+              <div class="rung top"><span class="tier">铂金</span><span class="req">金卡后 1 年 20 晚（noshow ≤3），或 90 天住 15 晚速升：85 折 + 最多 2 份早餐 + 升房，低频够不着，别追</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>新旧页面还有一处对不上：</b>较新的会员计划页在银与金之间多出一档「玫瑰金」（银卡住 5 晚升、再住 10 晚升金，铂金保级口径也不同），与帮助页的四级口径并存<span class="flag">未核实以哪套为准</span>，升级进度只认华住 App 内显示。</li>
+              <li><b>代订例外（官网明文）：</b>线上帮别人订可享会员折扣（每天上限 10 间）；积分和定级间夜仍须「本人预订、本人入住」；到店或电话代订不享折扣。</li>
+              <li><b>免费捷径先查：</b>滴滴 V5/V6 可匹配华住金卡（见滴滴卡）；另有高校/企业合作直通金卡的报道，动手前在 App 活动页核对当期是否开放。</li>
+              <li><b>买卡回本账：</b>¥219 金卡靠 88 折（比星会员多省约 7–10 个点）加 1 份早餐回本，大致要住华住系 4–6 晚才稳妥——一年总量只有几晚时，没住满计划前别提前买。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></span> 星/银免费，金卡有明确住宿计划再买</div>
+            <p class="src">来源：华住官网帮助页与会员计划页（两页口径冲突处已标注）；学生价 88 折/周日周一 75 折为新浪报道，低-中可信度。</p>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-head">
+              <h3>亚朵 ACARD<span class="en">Atour · 亚朵 / 亚朵 S / 亚朵见野 / 轻居</span></h3>
+              <span class="badge badge-check">先查免费直通</span>
+            </div>
+            <p class="verdict-line"><b>单晚价最高的一家（常见 ¥350–600），但免费拿金卡的口子也最多。</b>先翻芝麻分，再谈买不买。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">注册会员</span><span class="req"><b>注册免费</b>：约 92 折（二手汇总口径）<span class="flag">未核实</span></span></div>
+              <div class="rung"><span class="tier">银卡</span><span class="req"><b>1 个房晚</b>或 139 定级积分：88 折</span></div>
+              <div class="rung"><span class="tier">金卡</span><span class="req"><b>6 个房晚</b>或 2,800 定级积分：88 折 + 早餐权益 + Aplus 服务；也可 ¥199 买年卡，或芝麻分 ≥800 免费领季卡（见下）</span></div>
+              <div class="rung top"><span class="tier">铂金 / 黑金</span><span class="req">铂金 36 房晚或 16,800 积分：85 折；黑金 8 折、邀请制——黑金门槛两说并存（累计消费 20 万与 30 万）<span class="flag">未核实</span>，低频用户都不必考虑</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>最先查的一步：</b>支付宝芝麻信用 ≥800 可免费领亚朵金卡季卡（社区与官宣帖口径：含 88 折、早餐券、延退券，季卡期住满 3 晚可升年卡）——当期是否开放以支付宝「会员通」页面为准<span class="flag">促销期权益，未长期核实</span>。</li>
+              <li><b>早餐说法打架：</b>一说金卡每年 16 张早餐券，一说金卡含双早，延退一说券制延至 18:00、一说等级直延——都来自二手/AI 生成类文章<span class="flag">未核实</span>，领卡后以 ACARD 权益页逐项为准。</li>
+              <li><b>渠道决定权益开关：</b>「亚朵锦囊」（银 1 份 / 金 2 份 / 铂金 3 份，住客帖口径）等入住礼遇基本只认官方渠道订单，第三方平台订的常无锦囊——和国际集团「OTA 不攒 SNP」是同一个逻辑。</li>
+              <li><b>官方价保障：</b>2025 年升级 ACARD 后主推「降价退、买贵赔」（官方渠道订贵了赔积分），二手来源口径，下单前在 App 核对当期规则。</li>
+              <li><b>买卡回本账：</b>¥199 年卡在 ¥400/晚的房上靠折扣加早餐，约 2–3 晚回本——前提是本来就打算住亚朵；为回本硬住贵的，等于倒贴。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 免费直通高，靠住升铂金低</div>
+            <p class="src">来源：什么值得买社区拆解、新浪（原文标注 AI 生成）等二手来源；亚朵未在本轮核到一份完整的官方等级表，门槛数字整体按「未完全核实」使用。</p>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-head">
+              <h3>首旅如家<span class="en">BTG Homeinns · 如家 / 如家商旅 / 莫泰 / 驿居等</span></h3>
+              <span class="badge badge-check">先看优惠通道</span>
+            </div>
+            <p class="verdict-line"><b>价位带最低的一家。</b>真正值得优先看的是面向在校生的「青春卡」等优惠通道，不是它的钻石。</p>
+            <div class="ladder">
+              <div class="rung"><span class="tier">如会员</span><span class="req"><b>注册免费</b>：98 折，积分 1 倍</span></div>
+              <div class="rung"><span class="tier">银会员</span><span class="req"><b>¥59 购买</b>（或攒成长值）：92 折，延退至 13:00，积分 1.2 倍，无免费早餐</span></div>
+              <div class="rung"><span class="tier">金会员</span><span class="req">88 折 + <b>单人早餐</b>，延退至 14:00，积分 1.8 倍；可付费买「永久金卡」，<b>价格须登录 App 查看</b><span class="flag">未核实</span></span></div>
+              <div class="rung top"><span class="tier">白金 / 钻石</span><span class="req">85 折 / 8 折 + 双早，延退至 15:00，积分 2.2 / 2.5 倍；靠入住升级，低频够不着</span></div>
+            </div>
+            <ul class="facts">
+              <li><b>青春卡（学生专享，二手报道）：</b>全日制在校生（含硕博）认证后订房低至 <b>74 折 + 免费早餐 + 延退至 14:00/15:00</b>，另含非入住期健身房/洗衣房——若在如家 App 内验真，这是三家集团里折扣最狠的一张学生卡；毕业自动失效，确切折扣与参与门店以认证后页面为准<span class="flag">促销口径，未核实</span>。</li>
+              <li><b>积分：</b>5000 分起兑免费房（报道口径），积分有效期约 2 年；低频攒分慢，别为了兑房多住。</li>
+              <li><b>每月 15 日会员日：</b>白金/钻石有 5 折兑房类限量权益（报道口径），与低频用户关系不大；如会员/银卡偶有「升金体验」通道，刷到再用。</li>
+              <li><b>与锦江的区别：</b>如家与锦江是两家不同集团——锦江金卡管的是锦江之星、维也纳、丽枫、7 天那边，在如家不通用，别混。</li>
+            </ul>
+            <div class="friend">低频友好度 <span class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></span> 青春卡验真则高，否则只免费注册</div>
+            <p class="src">来源：新浪转述首旅如家 2025 年 3 月升级后会员规则（二手/AI 生成类文章）；青春卡与金卡售价未获官方页面核实。</p>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-head">
+              <h3>三家横比 · 怎么选<span class="en">含与锦江系的区别</span></h3>
+              <span class="badge badge-backup">一张表看完</span>
+            </div>
+            <ul class="facts">
+              <li><b>门店与价位：</b>华住最密（经济到中高端全覆盖，二三线城市也有汉庭、全季）；亚朵最贵、最少（中高端，三线城市门店较少）；如家最便宜（经济型为主）；锦江系（维也纳、丽枫、锦江之星）若持有其金卡，订前顺手比会员价。</li>
+              <li><b>免费层立刻能省的：</b>华住星会员约 95/98 折（口径冲突）＞ 如家如会员 98 折 ＞ 亚朵注册约 92 折（二手口径）——都小，真正的省钱在金卡档：华住金、亚朵金同为 88 折，如家金同为 88 折，差别在「怎么拿到」：华住靠滴滴匹配或 ¥219，亚朵先查芝麻 800 免费领，如家先验青春卡 74 折。</li>
+              <li><b>早餐门槛：</b>三家都要到金卡才有免费早餐（华住金 1 份、如家金单早、亚朵金券/双早口径不一）；银卡及以下都没有——这正是「免费领到金卡」比「多省 3 个点折扣」更值钱的原因。</li>
+              <li><b>共同红线：</b>三家的积分、定级晚数都只认官方渠道 + 本人入住；OTA 订单通常不攒集团积分、不用集团权益。先比价、再回官方订，是固定动作。</li>
+              <li><b>动作清单：</b>① 华住免费注册；② 支付宝查芝麻分领亚朵金卡季卡；③ 如家 App 看青春卡等优惠通道；④ 三家都不买年卡、不追铂金/钻石，等真有连续住宿计划再回头算回本账。</li>
+            </ul>
+            <p class="src">横比口径：各家上卡标注的来源与可信度；折扣均按门市价口径，实际以各 App 会员价页面为准。</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================== CALC ===================== -->
+      <section id="calc">
+        <div class="sec-head"><span class="no">04</span><h2>按用量估算：能升到哪一级？</h2></div>
+        <p class="sec-sub">拖动两个滑杆，按各平台已核实的门槛粗算一年内够得着的最高等级。口径：酒店订单按每晚一单估算；同程的订单含火车票等全部订单。未核实门槛的平台（飞猪 F3、去哪儿、美团中段、滴滴）不参与计算；亚朵按二手口径的房晚门槛参与，仅作示意。</p>
+        <div class="calc">
+          <div class="calc-controls">
+            <div>
+              <label for="nightsRange">一年酒店订单数（单）<output id="nightsOut">2</output></label>
+              <input type="range" id="nightsRange" min="0" max="20" step="1" value="2" />
+            </div>
+            <div>
+              <label for="ordersRange">一年全部旅行订单（含火车票/机票）<output id="ordersOut">6</output></label>
+              <input type="range" id="ordersRange" min="0" max="40" step="1" value="6" />
+            </div>
+          </div>
+          <div class="calc-out" id="calcOut"></div>
+        </div>
+      </section>
+
+      <!-- ===================== PROXY / SNP ===================== -->
+      <section id="proxy">
+        <div class="sec-head"><span class="no">05</span><h2>帮别人订，到底算谁的？两条规则别搞混</h2></div>
+        <p class="sec-sub">这是低频玩家最容易踩的坑：OTA 等级和酒店集团房晚是两套完全不同的账，混淆一次就白花钱。</p>
+        <div class="rules">
+          <div class="rule good">
+            <h3>OTA 等级进度：一般算下单账号的</h3>
+            <p>携程、Booking 都是用下单账号帮家人朋友订、对方入住，完成入住后订单数照样计入下单账号的等级。</p>
+            <ul>
+              <li><b>Expedia 写得最死（官网原文）：</b>返现归下单的账号持有人，「无论订单里写哪位出行人」。</li>
+              <li><b>携程：</b>有黑钻用户自述全家全公司行程挂一个账号、积分全归自己；但官方没有明文保证。</li>
+              <li><b>Booking / Agoda / 飞猪 / 同程 / 美团 / 去哪儿 / Klook：</b>都没查到官方明文<span class="flag">未核实</span>，按「归下单账号」当工作假设可以，别拿它当冲级依据。</li>
+              <li><b>红线：</b>Trip.com 官方 FAQ 明确警告，纯为操纵等级的订单可被取消资格；且帮订意味着取消、到店问题都由下单人担责，只帮信得过的人订。</li>
+            </ul>
+          </div>
+          <div class="rule bad">
+            <h3>酒店集团房晚/积分（SNP）：只认入住的会员本人</h3>
+            <p>万豪、希尔顿、IHG 的标准条款都是「会员必须实际入住并完成住宿」才计房晚积分。用自己的 OTA 账号给别人订品牌酒店：<b>下单人攒不到房晚，入住人也享受不到下单人的早餐、升房、贵宾厅权益</b>。</p>
+            <ul>
+              <li>普通 OTA 房价在万豪/希尔顿/IHG <b>一律不攒 SNP</b>，IHG 明确把 OTA/第三方价列为不合格房价。</li>
+              <li>例外只有积分兑换房（可订给他人）和极少数允许权益转让的计划（如凯悦 Guest of Honor）。</li>
+              <li>华住例外只在价格：线上代订能享会员折扣（≤10 间/天），积分房晚仍须本人订本人住。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="exception"><b>唯一打通两套账的通道：</b>在飞猪（或携程/美团）的品牌<b>官方旗舰店</b>订标有「享会员权利」的房价，可以攒 SNP 和会籍权益——但只攒给实际入住的那位会员，且只限那个标记房价。这正是飞猪排第一的核心原因。（该说法来自二手来源，与「OTA 订单普遍不攒分、只有官方 App 或旗舰店订单算数」的行业报道一致。）</div>
+      </section>
+
+      <!-- ===================== PRICE ===================== -->
+      <section id="price">
+        <div class="sec-head"><span class="no">06</span><h2>住宿价格：没有哪家永远最便宜，只有三种便宜法</h2></div>
+        <p class="sec-sub">第三方监测里，同一间房同一晚各平台价差经常有 10–37%（促销类来源口径），赢家随券、等级、日期和酒店变。正确做法永远是：对具体那一晚，比 2–3 家的<b>含税到手总价</b>。</p>
+        <div class="modes">
+          <div class="mode">
+            <h3>日常价（随订随住）</h3>
+            <div class="win">常胜：同程 · 去哪儿 · 美团（本地临时）</div>
+            <p>经济型/中档房，同程（微信生态获客成本低）和去哪儿（同房多供应商竞价）最常给出最低价；美团强在同城当天。携程挂牌价常偏高 ¥10–25/晚，但五星和国际连锁常反超——都属促销类报道的方向性结论，<b>数字低可信度</b>。</p>
+            <p>品牌酒店要多比一家：<b>官方会员价常比 OTA 挂牌价低 10–20%</b>（新浪报道口径），OTA 券后有时能反超 15–25%。</p>
+          </div>
+          <div class="mode">
+            <h3>通兑 / 囤货套餐</h3>
+            <div class="win">常胜：飞猪（双 11 / 618）</div>
+            <p>品牌旗舰店通兑是计划性出行的最低价来源：如万豪 2 晚套餐报道价 ¥499 起、华住/亚朵通兑约 ¥139–169/晚起——<b>均为促销示例价，不是长期价</b>。携程「先囤后付」、美团连锁通兑是同类玩法。</p>
+            <p>前提：日期在有效期内真能用掉，且产品写明「不约可退」；用花呗/信用购囤货等于先上信贷，低频用户慎用。</p>
+          </div>
+          <div class="mode">
+            <h3>官网直订（保级优先）</h3>
+            <div class="win">常胜：品牌官方 App / 小程序、飞猪旗舰店</div>
+            <p>对万豪、希尔顿、IHG、锦江这类已持有会籍的品牌，官方直订（或旗舰店「享会员权利」价）是<b>唯一稳定攒 SNP 的渠道</b>，还能用上早餐、升房、延迟退房。</p>
+            <p>算总账：OTA 便宜 ¥20–50 但不攒房晚、没早餐，对有会籍的人往往是更贵的选择；反之独立酒店没有 SNP 可攒，哪家便宜订哪家。</p>
+          </div>
+        </div>
+
+        <h3 style="margin: 26px 0 12px; font-size: 17px;">维度速查（低频视角）</h3>
+        <div class="matrix">
+          <div class="mrow"><div class="dim">国内房源（二三线城市）</div><div class="best">携程、同程、美团</div><div class="worst">Agoda（约 8 万）、Booking（约 15 万）、Expedia（弱）——均为指南估算</div></div>
+          <div class="mrow"><div class="dim">出境房源</div><div class="best">Booking（号称 2800 万+）、Agoda、Expedia、Trip.com</div><div class="worst">同程、美团；滴滴无房源</div></div>
+          <div class="mrow"><div class="dim">免费取消</div><div class="best">Booking（约 70–80% 房源，指南估算）、去哪儿（标注透明）</div><div class="worst">Agoda 促销价、抖音闪购、美团券价——都严，看房价条款</div></div>
+          <div class="mrow"><div class="dim">客服 / 售后</div><div class="best">携程（中文 24/7、团队最大）、Booking（40+ 语种）</div><div class="worst">Agoda（多次被报难联系）、抖音/小红书（靠供应商）</div></div>
+          <div class="mrow"><div class="dim">等级保质期</div><div class="best">Booking（终身不降级）</div><div class="worst">Expedia（每年 1 月清零）、Klook（365 天无宽限）、携程成长分（逐分 365 天过期）</div></div>
+          <div class="mrow"><div class="dim">支付</div><div class="best">国内 OTA 微信/支付宝齐全；飞猪信用住免押金</div><div class="worst">国际 OTA 以银行卡为主，国内支付是否支持未核实</div></div>
+          <div class="mrow"><div class="dim">学生权益</div><div class="best">同程（学生通道 + 火车票）、携程（学生价）、华住学生价、12306 学生票 75 折</div><div class="worst">Booking / Agoda / Expedia / Klook 无学生计划；滴滴无酒店学生权益</div></div>
+          <div class="mrow"><div class="dim">机票/火车跨界</div><div class="best">同程（火车票最强）、携程（机票火车最成熟）、飞猪（88VIP 生态 + 航司挑战）</div><div class="worst">Booking/Agoda 只有机票；Klook 只有玩乐</div></div>
+        </div>
+      </section>
+
+      <!-- ===================== JILIN INVENTORY ===================== -->
+      <section id="jilin">
+        <div class="sec-head"><span class="no">07</span><h2>案例：三线城市为什么 Booking 只有几家、Agoda 却有几十家（以吉林市为例）</h2></div>
+        <p class="sec-sub">先给结论：<b>量级没错，而且已经实查确认——不是吉林市没酒店，是两家的「上架方式」根本不同。</b>不同日期实查结果会在 4–5 家之间浮动，差 1 家是日期和有房状态不同，不是固定库存数。吉林市在携程/Trip.com 上有数百家可订住宿，汉庭、全季、亚朵、宜必思都在正常营业；Booking 只显示个位数，缺的是 Booking 自己的房源。</p>
+
+        <div class="jilin-meta"><b>实查口径（2026-11-20 16:25–16:30 北京时间，公开页面实查）：</b>吉林市，入住 2026-11-28（周六）— 退房 11-29（周日），1 间房、2 位成人，未登录。两站条件一致；Booking 左侧全部筛选均未勾选，不是筛选造成的少。下面数字只对这组日期成立，换日期会变。</div>
+
+        <div class="jilin-compare">
+          <div class="jilin-box">
+            <div class="big">5 <small>家 · 全部是酒店</small></div>
+            <h3>Booking.com</h3>
+            <p>页面标题「吉林：共 5 家住宿」；住宿类型里只有「酒店：5」一项，非酒店 0 家。含税价为 1 晚 2 人、人民币，多次查看保持一致：</p>
+            <ul class="jilin-list">
+              <li><span>锦江之星（万科城医药学院店）</span><span class="price">¥141</span></li>
+              <li><span>吉林厦门街轻居酒店</span><span class="price">¥297</span></li>
+              <li><span>丽柏酒店（北山公园松花江店）</span><span class="price">¥328</span></li>
+              <li><span>亚朵酒店（市政府北京路店）</span><span class="price">¥356</span></li>
+              <li><span>吉林北大湖假日酒店（离市中心 48.1 km）</span><span class="price">¥2,525</span></li>
+            </ul>
+            <p style="margin-top:10px;">5 家里 1 家还在 48 公里外的北大湖，真正算市区能住的只有 4 家——搜索时常被体感为「只有 4 家」，原因也在这里。</p>
+          </div>
+          <div class="jilin-box">
+            <div class="big">49 <small>家 · 约 44 酒店 + 5 非酒店</small></div>
+            <h3>Agoda</h3>
+            <p>未筛选时多次加载稳定为 49 个住宿。其中非酒店 5 个：<b>公寓 4 个</b>（丰满区、蛟河、舒兰、松花湖万科各 1 个，后者该日期已售罄）+ <b>独栋房屋 1 个</b>（磐石）；其余约 44 家为酒店——44 是 49−5 的推算值，Agoda 勾选「酒店」后计数器仍显示 49、没直接给酒店数<span class="flag">推算</span>。</p>
+            <p style="margin-top:8px;"><b>市区及周边举例：</b>全季吉林万达广场、松花湖西武王子大饭店、吉林世贸万锦大酒店、宜必思吉林北山公园、维也纳国际吉林大街火车站、吉林江南厦门街亚朵 X、Hampton by Hilton 吉林大街店、松花湖瞻云 SALOMON 等。</p>
+            <p style="margin-top:8px;">范围也不一样：Agoda 的「吉林」把<b>蛟河、磐石、舒兰、永吉</b>等下辖县市都算进来了，不全是吉林市区。价格当时以新加坡元（SGD）显示且多次加载有小幅浮动，故这里只列名字、不列 Agoda 价格。</p>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step"><b>同属一个集团，却是两套独立库存。</b>Booking.com 和 Agoda 都归 Booking Holdings，但各自签约、各自定价、会员体系（Genius vs AgodaVIP）也不互通——行业对比反复确认两家是「独立库存池」。所以「同集团应该一样多」这个前提不成立，亚太区本来就是 Agoda 的主场。</div>
+          <div class="step"><b>签约模式不同：直签 vs 批发聚合。</b>Booking 以代理模式为主：酒店自己在 Booking 后台注册、上架、维护房态和价格，Booking 抽佣（常见口径 15–18%）。Agoda 以商家/批发模式为主：批量按净价拿房再转售，还会接入批发商（bedbank）和合作伙伴的库存——<b>一家酒店不需要和 Agoda 直签，也可能被批发渠道摆上 Agoda 的货架</b>。吉林这种三线城市里大量本地酒店、汉庭/全季加盟店走的正是批发和国内分销渠道，于是 Agoda 显示得多，Booking 直签池里根本没有。</div>
+          <div class="step"><b>国内小酒店「上不了」也「不想上」Booking。</b>直签要自己对接英文后台、外币结算和境外平台规则，本地获客又主要靠携程、美团、飞猪——对吉林一家汉庭加盟店来说，上 Booking 几乎不带来客人，自然不上。这也是全国规律：指南估算 Booking 大陆房源约 15 万家、Agoda 约 8 万家直签口径、携程约 140 万家（均为第三方估算）；但 Agoda 靠聚合库存把「能显示、能下单」的数量又撑了上去，两件事不矛盾——一个是直签数，一个是货架数。</div>
+          <div class="step"><b>这次实查排除了「是筛选问题」。</b>Booking 那边全部筛选复选框均未勾选，本身就只有 5 家可订；它的结果数对日期和「有房可订」状态敏感，没开放房态的直接不显示。Agoda 则相反：目的地边界更宽（连下辖县市一起算），还会混入公寓和独栋房屋。另注意两个数字陷阱：Agoda 顶部大标题曾波动出现 123、126，面包屑写「吉林（373）」，<b>都不是该日期的搜索结果数，不要采用</b>，稳定结果数是 49；Booking 写作「北大湖假日酒店」、Agoda 写作「北大壶假日酒店」，是同一家酒店，两站写法不同。</div>
+          <div class="step"><b>数量多 ≠ 更靠谱，下单前多验一步。</b>Agoda 在吉林多出来的房源里，有相当部分是第三方批发库存：价格可能真便宜，但要盯三件事——是否含税到手价（实查时它默认显示新元，别被数字迷惑）、取消条款（批发房常不可退）、到店是否有房（极端情况下需平台二次确认）。Booking 那 5 家反而多是直签，房态和免费取消更稳。实用结论：<b>在吉林市（以及绝大多数国内三线城市）查房源别用 Booking 当标尺</b>——用携程/Trip.com 查全、美团/同程查本地价、华住/亚朵等集团 App 查会员价；Agoda 只当比价和捡批发价的补充，真订之前打酒店前台电话确认一句最稳。</div>
+        </div>
+      </section>
+
+      <!-- ===================== HARBIN ===================== -->
+      <section id="practical">
+        <div class="sec-head"><span class="no">08</span><h2>落到实处：只住 1 晚时怎么订</h2></div>
+        <p class="sec-sub">本文没有查任何具体日期的实时价格（价格随日期和库存每天变，任何提前的报价都不作数），以下是结构性的订法，照着走不会错。</p>
+        <div class="steps">
+          <div class="step">同一间房、同一晚，在<b>携程、飞猪、同程、美团、去哪儿</b>各搜一遍，只比<b>含税到手总价</b>，不看划线价和「立减」话术。</div>
+          <div class="step">如果选的是<b>万豪/希尔顿/IHG/锦江</b>的酒店：先查官方 App 会员价和飞猪旗舰店「享会员权利」价——这两条能攒房晚积分、用上相应等级的会员权益；OTA 便宜二三十但什么都不攒，总账通常更亏。</div>
+          <div class="step">如果是<b>独立酒店或经济连锁</b>（没有 SNP 可攒）：直接订最便宜且<b>可免费取消</b>的那家，同程/去哪儿/美团常胜出；Booking L1 的 9 折是备选。华住旗下先看华住会会员价，亚朵先看 ACARD（领过金卡季卡就用上），如家先看青春卡认证价。</div>
+          <div class="step"><b>别为一晚固定行程买通兑套餐</b>，除非明确写「不约可退」且单晚价确实低于日常价；也别用花呗/先囤后付为一晚房上信贷。</div>
+          <div class="step">各平台的免费认证与新人通道有空可做一次，成本为零，偶尔能刷出专属价——但别指望它能赢过通兑或会员价。</div>
+        </div>
+      </section>
+
+      <!-- ===================== DONT ===================== -->
+      <section id="dont">
+        <div class="sec-head"><span class="no">09</span><h2>别追清单：这些等级和付费卡，对低频用户都是负收益</h2></div>
+        <p class="sec-sub">共同点：门槛按「一年住几十晚或花几万块」设计，而低频用户一年只有几晚。靠帮别人订房刷级同理——OTA 分可能归下单人，酒店房晚永远不归下单人，还担着取消和到店的责任。</p>
+        <div class="dont">
+          <div class="dont-item"><b>携程钻石 / 黑钻 / 合伙人</b><span>成长分 1 万–8 万，约等于酒店消费 ¥2–8 万/年。</span></div>
+          <div class="dont-item"><b>飞猪 F4–F6</b><span>3,000–50,000 里程，约 ¥6,000–¥100,000/年旅行消费。</span></div>
+          <div class="dont-item"><b>同程白金卡 / 黑卡</b><span>40 单或 ¥50,000；黑卡邀请制。黑鲸付费卡（¥88/¥98 未核实）年订不到 5 次也别买。</span></div>
+          <div class="dont-item"><b>美团黑金 / 黑钻</b><span>约 ¥10,000 / ¥30,000 每年消费，酒店只是其权益的一小块。</span></div>
+          <div class="dont-item"><b>Booking Genius L3 · Agoda Diamond</b><span>分别要 2 年 15 单、24 个月 15 单且消费 US$1,500。</span></div>
+          <div class="dont-item"><b>Expedia Platinum</b><span>一年 30 个行程元素，且次年 1 月 1 日清零重来。</span></div>
+          <div class="dont-item"><b>Klook Platinum</b><span>玩乐消费累计 US$2,000 才到，和订房无关。</span></div>
+          <div class="dont-item"><b>滴滴 V7 / V8</b><span>新体系门槛未公布；为酒店会籍刷打车的钱，远超 ¥219 直买一张华住金卡。</span></div>
+          <div class="dont-item"><b>去哪儿钻石</b><span>门槛未核实，且与携程同集团重复建设。</span></div>
+          <div class="dont-item"><b>华住铂金 · 亚朵铂金/黑金 · 如家白金/钻石</b><span>分别要一年 20 晚、36 房晚、靠入住攒到高档——都是为高频出差设计的。免费直通（滴滴匹配、芝麻领卡、青春卡）能领则领，靠住硬升不值。</span></div>
+          <div class="dont-item"><b>提前买集团年卡</b><span>华住金 ¥219、亚朵金 ¥199、如家银 ¥59——都有明确住宿计划、算过回本晚数再买；没有计划先买卡，等于为折扣先交钱。</span></div>
+          <div class="dont-item"><b>只为酒店买 88VIP</b><span>已经是淘宝用户就顺手映射 F3；不是的话别为订房单买（其 ¥88/¥888 价格取决于淘气值，未核实）。</span></div>
+        </div>
+      </section>
+
+      <!-- ===================== OPEN QUESTIONS ===================== -->
+      <section id="open">
+        <div class="sec-head"><span class="no">10</span><h2>没查实的部分（别拿这些数字做决策）</h2></div>
+        <div class="openq">
+          <ul>
+            <li>携程国内铂金成长分门槛：2,000 与 3,000 两说并存，8 级完整对应关系未核实。</li>
+            <li>飞猪 2024 年新体系（F1–F6）中 F3 的确切里程门槛，任何来源都没给出。</li>
+            <li>去哪儿 V1–V5、美团白银/黄金/铂金、滴滴新成长值体系 V1–V8 的各档门槛，均未找到官方数字。</li>
+            <li>同程黑鲸会员价格 ¥88 与 ¥98 两说；其酒店返现比例为促销口径。</li>
+            <li>AgodaCash 有效期说法从 60 天到 5 年都有；AgodaVIP 身份有效期 6 个月与 24 个月窗口两种说法冲突。</li>
+            <li>Expedia One Key 对中国大陆账号是否完整可用、国内房源规模，均未核实。</li>
+            <li>Booking / Agoda 在国内订房是否支持微信、支付宝，未核实——结账时现场确认。</li>
+            <li>各平台学生折扣的确切数字多来自 2023 年文章或促销软文，只能确认「学生通道存在」。</li>
+            <li>88VIP 的价格（¥88 还是 ¥888，取决于淘气值）未核实。</li>
+            <li>本文没有任何具体日期、具体酒店的实时价格数据；客服响应速度、免费取消比例、房源数量等数字来自第三方指南的自测估算，非官方口径。</li>
+            <li>华住会两处官方页面口径冲突：帮助页星会员 95 折、四级体系；会员计划页星会员 98 折、且多出「玫瑰金」一档，各档间夜门槛也不同——以 App 内进度为准。</li>
+            <li>亚朵 ACARD 没有核到完整的官方等级表：6 房晚升金、36 房晚升铂金、黑金累计消费 20 万/30 万两说、早餐券数量与延退方式，各二手来源互相打架；芝麻 800 领金卡季卡为促销期活动，是否长期开放未核实。</li>
+            <li>首旅如家青春卡 74 折、金卡「永久卡」售价、白金/钻石的入住升级门槛，均未获官方页面核实，来自二手报道。</li>
+            <li>吉林市房源数已实查（2026-11-28—29、1 间房 2 位成人）：Booking 5 家、Agoda 49 家，只对该日期成立，换日期会变；其中 Agoda「约 44 家酒店」是 49 减去 5 个非酒店的推算值，Agoda 未直接给出酒店数。两家全国房源总数的对比数字（15 万 / 8 万 / 140 万）仍为第三方指南估算，非官方。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================== SOURCES ===================== -->
+      <section id="sources">
+        <div class="sec-head"><span class="no">11</span><h2>主要来源</h2></div>
+        <p class="sec-sub">标「实地核实」的为调研时打开官网确认；其余为搜索索引级来源（含二手报道与促销文章，已在正文按可信度标注）。</p>
+        <ul class="sources">
+          <li>Trip.com 会员体系（官网，实地核实）：<a href="https://www.trip.com/ask/questions/trip.com-membership.html" target="_blank" rel="noopener">trip.com/ask/questions/trip.com-membership.html</a></li>
+          <li>Expedia One Key（官网，实地核实）：<a href="https://www.expedia.com/welcome-one-key" target="_blank" rel="noopener">expedia.com/welcome-one-key</a></li>
+          <li>携程会员规则（旧官网页）：<a href="https://pages.ctrip.com/commerce/promote/200901/other/lbjh/lbjh1.htm" target="_blank" rel="noopener">pages.ctrip.com/commerce/promote/200901/other/lbjh/lbjh1.htm</a></li>
+          <li>携程成长分/黑钻（二手）：<a href="https://post.smzdm.com/p/a8px7wn0/" target="_blank" rel="noopener">post.smzdm.com/p/a8px7wn0</a>、<a href="https://post.smzdm.com/p/az8k49ko/" target="_blank" rel="noopener">post.smzdm.com/p/az8k49ko</a></li>
+          <li>Booking Genius 等级指南：<a href="https://flyerfolio.com/en/wiki/a/booking-com-genius-levels-guide/" target="_blank" rel="noopener">flyerfolio.com/en/wiki/a/booking-com-genius-levels-guide</a></li>
+          <li>AgodaVIP：<a href="https://www.hoteldig.com/en/agodavip/" target="_blank" rel="noopener">hoteldig.com/en/agodavip</a>、<a href="https://blog.wego.com/agoda-promo-code/" target="_blank" rel="noopener">blog.wego.com/agoda-promo-code</a></li>
+          <li>Klook Rewards：<a href="https://www.topcashback.com/klook/" target="_blank" rel="noopener">topcashback.com/klook</a></li>
+          <li>飞猪体系与 88VIP：<a href="https://36kr.com/p/1063588305004166" target="_blank" rel="noopener">36kr.com/p/1063588305004166</a>、<a href="https://finance.sina.cn/2025-08-06/detail-infizxps9910484.d.html" target="_blank" rel="noopener">finance.sina.cn 88VIP 权益</a>、<a href="https://post.smzdm.com/p/a3xp86z7/" target="_blank" rel="noopener">post.smzdm.com/p/a3xp86z7</a></li>
+          <li>同程等级/黑鲸：<a href="http://t.cj.sina.com.cn/articles/view/7241692819/1afa376930010451cq" target="_blank" rel="noopener">新浪财经·同程等级</a>、<a href="https://feng.ifeng.com/c/8xQKeOwuRBz" target="_blank" rel="noopener">凤凰网·同程学生价</a></li>
+          <li>HopeGoo（同程全球品牌）：<a href="http://itunes.apple.com/app/id6479733264" target="_blank" rel="noopener">App Store · HopeGoo</a></li>
+          <li>滴滴新体系与会籍匹配：<a href="https://news.qq.com/rain/a/20260603A07LHX00" target="_blank" rel="noopener">腾讯新闻·滴滴会员改版</a>、<a href="https://wallstreetcn.com/articles/3753150" target="_blank" rel="noopener">华尔街见闻·滴滴权益</a></li>
+          <li>美团新会员体系：<a href="https://finance.sina.com.cn/wm/2025-04-04/doc-ineryzhm1536502.shtml" target="_blank" rel="noopener">新浪财经·美团会员</a></li>
+          <li>去哪儿：<a href="https://finance.sina.com.cn/roll/2026-07-30/doc-inikqqha9661744.shtml" target="_blank" rel="noopener">新浪财经·去哪儿价格透明</a></li>
+          <li>华住会（官网帮助页）：<a href="https://m.huazhu.com/help/membership" target="_blank" rel="noopener">m.huazhu.com/help/membership</a></li>
+          <li>华住会会员计划页（与帮助页口径有冲突，已在正文标注）：<a href="https://hrewards.huazhu.com/hotel/member" target="_blank" rel="noopener">hrewards.huazhu.com/hotel/member</a></li>
+          <li>亚朵 ACARD 等级与芝麻领卡（什么值得买社区拆解）：<a href="https://post.smzdm.com/p/a03ql040/" target="_blank" rel="noopener">post.smzdm.com/p/a03ql040</a>；亚朵锦囊与渠道规则：<a href="https://post.smzdm.com/p/ae6vkwq3/" target="_blank" rel="noopener">post.smzdm.com/p/ae6vkwq3</a></li>
+          <li>首旅如家会员折扣/积分与青春卡（新浪转述官方规则，二手）：<a href="https://k.sina.cn/article_7879849916_1d5acf7bc06801kvfo.html?from=tech" target="_blank" rel="noopener">新浪·如家会员拆解</a>、<a href="https://k.sina.cn/article_7880068394_1d5b04d2a06803hgne.html?from=tech" target="_blank" rel="noopener">新浪·如家青春卡</a></li>
+          <li>Booking 与 Agoda 同集团不同库存/定价模式：<a href="https://www.hotelsbookie.com/agoda-vs-booking-com-which-is-cheaper/" target="_blank" rel="noopener">hotelsbookie.com · Agoda vs Booking</a>、<a href="https://whichranks.com/blog/agoda-vs-booking-southeast-asia/" target="_blank" rel="noopener">whichranks.com · Agoda 亚太优势</a>、<a href="https://www.zentrumhub.com/blog/best-hotel-api-china-apac/" target="_blank" rel="noopener">zentrumhub.com · 中国酒店供应链分层</a></li>
+          <li>吉林市房源数实查（公开页面实查，2026-11-20 16:25–16:30，条件：2026-11-28—29、1 间房 2 位成人、未登录、Booking 无筛选勾选）：Booking 5 家（含税价 ¥141–¥2,525）、Agoda 49 家（约 44 酒店 + 4 公寓 + 1 独栋房屋，含蛟河/磐石/舒兰/永吉）；Agoda 标题波动数 123/126 与面包屑 373 非结果数，未采用。</li>
+          <li>吉林市住宿供给侧（Agoda 在架门店示例）：<a href="https://tournews.tw/jilin-city-accommodation/" target="_blank" rel="noopener">tournews.tw · 吉林市 Agoda 精选</a>；Trip.com 吉林市页面：<a href="https://sg.trip.com/hotels/jilin-hotels-list-159/" target="_blank" rel="noopener">sg.trip.com/hotels/jilin-hotels-list-159</a></li>
+          <li>代订与酒店 SNP 规则：<a href="https://onemileatatime.com/guides/use-hotel-elite-status-for-others/" target="_blank" rel="noopener">onemileatatime.com 酒店会籍代订指南</a></li>
+          <li>国内订房横向指南（房源/取消估算出处）：<a href="https://travelhubchina.com/articles/booking-hotels-china-foreigner/" target="_blank" rel="noopener">travelhubchina.com</a></li>
+        </ul>
+        <p class="foot-note">本页基于 2026-11-20 的公开网络调研整理，平台规则与价格随时可能调整，下单前以各平台 App 内实时页面为准。携程与 Trip.com、去哪儿同属 Trip.com 集团；Booking.com 与 Agoda 同属 Booking Holdings；Expedia 与 Hotels.com 同属 Expedia Group。</p>
+      </section>
+
+    </div>
+
+    <script>
+      // ---------- scenario filter ----------
+      var notes = {
+        all: "",
+        domestic: "<b>国内订房：</b>主力是飞猪（品牌旗舰店/通兑）+ 携程（房源最深）；同程、美团、去哪儿负责比价，华住会管经济连锁直订。",
+        overseas: "<b>出境旅行：</b>Booking L1 终身 9 折打底，Agoda 比东南亚/港澳台价，Expedia 管欧美，Klook 只买门票和 eSIM；携程国际版 Trip.com 也能打。",
+        brand: "<b>品牌酒店保级：</b>国际集团只有两条路攒得到 SNP——官方直订，或飞猪旗舰店「享会员权利」价；国内集团（华住/亚朵/如家）同理，只认官方渠道订单。滴滴只领现成的会籍匹配。普通 OTA 订单一律不攒房晚。",
+        budget: "<b>省钱优先：</b>日常价看同程/去哪儿/美团，计划出行囤飞猪通兑，免费认证通道顺手做；但先算含税总价，别被划线价带偏。"
+      };
+      var chips = document.querySelectorAll(".chip");
+      var noteBox = document.getElementById("scenarioNote");
+      var cards = document.querySelectorAll("#cards .pcard");
+      chips.forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          chips.forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+          chip.setAttribute("aria-pressed", "true");
+          var scene = chip.getAttribute("data-scene");
+          if (scene === "all") {
+            noteBox.className = "scenario-note";
+            noteBox.innerHTML = "";
+            cards.forEach(function (card) { card.classList.remove("spotlight", "faded"); });
+            return;
+          }
+          noteBox.className = "scenario-note show";
+          noteBox.innerHTML = notes[scene];
+          cards.forEach(function (card) {
+            var tags = (card.getAttribute("data-tags") || "").split(" ");
+            if (tags.indexOf(scene) !== -1) {
+              card.classList.add("spotlight");
+              card.classList.remove("faded");
+            } else {
+              card.classList.remove("spotlight");
+              card.classList.add("faded");
+            }
+          });
+        });
+      });
+
+      // ---------- reachability calculator ----------
+      var nightsRange = document.getElementById("nightsRange");
+      var ordersRange = document.getElementById("ordersRange");
+      var nightsOut = document.getElementById("nightsOut");
+      var ordersOut = document.getElementById("ordersOut");
+      var calcOut = document.getElementById("calcOut");
+
+      function row(ok, label, text) {
+        return '<div class="calc-item ' + (ok ? "yes" : "no") + '"><span class="st">' +
+          (ok ? "够得着" : "够不着") + '</span><span><b>' + label + '</b> — ' + text + "</span></div>";
+      }
+
+      function calc() {
+        var n = parseInt(nightsRange.value, 10);
+        var o = parseInt(ordersRange.value, 10);
+        nightsOut.textContent = n;
+        ordersOut.textContent = o;
+        var html = "";
+        // Trip.com international: Gold 1 booking, Platinum 3 bookings/yr
+        if (n >= 3) html += row(true, "Trip.com 国际版 Platinum", "1 年 " + n + " 单 ≥ 3 单门槛：每年 1 次机场贵宾厅 + Trip Coins +50%。这是全场最可达的中段等级。");
+        else if (n >= 1) html += row(true, "Trip.com 国际版 Gold", "1 单即升；离 Platinum（3 单）还差 " + (3 - n) + " 单。");
+        else html += row(false, "Trip.com 国际版 Gold", "至少完成 1 单才有等级；注册的 Silver 只有会员价。");
+        // Booking: L2 5 bookings in 2 years -> approx with 2-year accumulation
+        var twoYr = n * 2;
+        if (twoYr >= 5) html += row(true, "Booking Genius L2", "按两年累计约 " + twoYr + " 单估算可达 5 单门槛（85–9 折 + 部分免费早餐/升房），且终身不降级。");
+        else html += row(false, "Booking Genius L2", "两年累计约 " + twoYr + " 单，未到 5 单；但 L1 的 9 折注册就有、终身有效，不亏。");
+        // Agoda Silver 2 bookings / 24mo
+        var agodaTwo = n * 2;
+        if (agodaTwo >= 5) html += row(true, "Agoda Gold", "两年约 " + agodaTwo + " 单可达 5 单门槛（最高 82 折）；但国内房源薄，意义有限。");
+        else if (agodaTwo >= 2) html += row(true, "Agoda Silver", "两年约 " + agodaTwo + " 单 ≥ 2 单门槛：VIP 房源最高 88 折，东南亚用得上。");
+        else html += row(false, "Agoda Silver", "两年累计订单不足 2 单；Bronze 只有内部价。");
+        // Tongcheng Silver: 6 orders or 2000 yuan in past year (orders incl. trains)
+        if (o >= 20) html += row(true, "同程金卡", "年订单 " + o + " ≥ 20 单门槛；不过同程酒店权益本身弱，到了也别当回事。");
+        else if (o >= 6) html += row(true, "同程银卡", "年订单 " + o + " ≥ 6 单门槛（火车票也算）——靠日常出行顺手就能到。");
+        else html += row(false, "同程银卡", "年订单 " + o + " 单，未到 6 单（或消费 ¥2,000）门槛；普卡长期有效，不急。");
+        // Expedia Silver: 5 elements in a calendar year (hotel nights count 1 each)
+        if (n >= 5) html += row(true, "Expedia Silver", "一年 " + n + " 个酒店间夜 ≥ 5 个元素门槛（85 折起、返 2%）；但次年 1 月清零，且只适合出境。");
+        else html += row(false, "Expedia Silver", "一年酒店元素约 " + n + " 个，未到 5 个；Blue 的 9 折起注册就有，出境时顺手用。");
+        // Huazhu Gold: 5 nights after Silver (3 nights) -> total 8 nights path, or buy 219
+        if (n >= 8) html += row(true, "华住金卡（住出来的）", "一年 " + n + " 晚若都住华住，可走完银卡 3 晚 + 金卡 5 晚的路径（88 折 + 免费早餐）。");
+        else html += row(false, "华住金卡（住出来的）", "靠住需要约 8 晚（银 3 + 金 5）；住不满就等真有需求时 ¥219 直买一年，别提前买。");
+        // Atour Gold: 6 nights (secondary sources, unverified against an official table)
+        if (n >= 6) html += row(true, "亚朵金卡（住出来的）", "一年 " + n + " 晚若都住亚朵，按二手口径 6 房晚可到金卡（88 折 + 早餐权益）；但先查芝麻分 ≥800 的免费季卡，能领就不用靠住。");
+        else if (n >= 1) html += row(false, "亚朵金卡（住出来的）", "按二手口径需 6 房晚，还差 " + (6 - n) + " 晚；银卡 1 晚可达。先查免费直通，别靠住硬攒。");
+        else html += row(false, "亚朵金卡（住出来的）", "按二手口径需 6 房晚；注册会员先用着，住亚朵前查一次芝麻领卡。");
+        calcOut.innerHTML = html;
+      }
+      nightsRange.addEventListener("input", calc);
+      ordersRange.addEventListener("input", calc);
+      calc();
+    </script>
+  </body>
+</html>
